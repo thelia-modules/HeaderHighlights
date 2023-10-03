@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database defaultIdMethod="native" name="TheliaMain" namespace="HeaderHighlights\Model">
+
+    <table name="header_highlights_image">
+        <column autoIncrement="true" name="id" primaryKey="true" required="true" type="INTEGER" />
+        <column name="file" required="true" size="255" type="VARCHAR" />
+        <column name="category_id" type="INTEGER" />
+        <column defaultValue="1" name="visible" required="true" type="TINYINT" />
+        <column name="position" type="INTEGER" />
+        <column name="title" size="255" type="VARCHAR" />
+        <column name="description" type="CLOB" />
+        <column name="chapo" type="LONGVARCHAR" />
+        <column name="postscriptum" type="LONGVARCHAR" />
+        <column name="image_block" size="255" type="VARCHAR" />
+        <column name="call_to_action" size="255" type="VARCHAR" />
+        <column name="display_type" size="255" type="VARCHAR"  />
+        <column name="url" size="255" type="VARCHAR" />
+        <behavior name="timestampable" />
+        <foreign-key foreignTable="category" name="fk_header_highlights_image_category" onDelete="CASCADE" onUpdate="RESTRICT">
+            <reference foreign="id" local="category_id" />
+        </foreign-key>
+        <behavior name="i18n">
+            <parameter name="i18n_columns" value="title, description, chapo, postscriptum, call_to_action, url" />
+        </behavior>
+    </table>
+
+    <external-schema filename="local/config/schema.xml" referenceOnly="true" />
+</database>

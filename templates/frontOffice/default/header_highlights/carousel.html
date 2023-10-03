@@ -1,0 +1,60 @@
+{$carouselImages = []}
+{$heroBlocks = []}
+
+{loop type="header_highlights_loop" name="hero-images-desktop" lang_id="1" display_type="desktop"}
+{$heroBlocks[$LOOP_COUNT]["desktop"] = [
+    "id" => $ID,
+    "title" => $TITLE,
+    "cta_label" => $CTA,
+    "cta_url" => $URL,
+    "desc" => $CATCHPHRASE,
+    "image_url" => $IMAGE_URL,
+    "category" => $CATEGORY
+  ]}
+{/loop}
+{loop type="header_highlights_loop" name="hero-images-mobile" lang_id="1" display_type="mobile"}
+{$heroBlocks[$LOOP_COUNT]["mobile"] = [
+    "id" => $ID,
+    "title" => $TITLE,
+    "cta_label" => $CTA,
+    "cta_url" => $URL,
+    "desc" => $CATCHPHRASE,
+    "image_url" => $IMAGE_URL,
+    "category" => $CATEGORY
+]}
+{/loop}
+  <ul class="Hero">
+    {foreach from=$heroBlocks item=block key=item}
+      {loop name="parent_category" type="category" id="{$block['desktop']['category']}" limit=1}
+        {$title_category = $TITLE}
+        {$category_color = $POSTSCRIPTUM}
+      {/loop}
+      <li class="Hero-item {if $item neq 1}Hero-item--small{/if}">
+        <a href="{$block['desktop']['cta_url']}" class="block h-full cursor-pointer test border-red">
+          <picture class="Hero-image">
+            <source media="(min-width: 640px)" srcset="{$block['desktop']['image_url']} 1x">
+            <img src="{$block['mobile']['image_url']}" alt="{$block['desktop']['title']}" loading="lazy"  class="w-full">
+          </picture>
+        </a>
+        <div class="Hero-itemContentWrapper">
+          <div class="Hero-itemContent">
+            <div class="Hero-itemContentContainer">
+              <div class="Hero-itemContentTitle {if $item neq 1}Hero-itemContentTitle--small{/if}">
+                {$block['desktop']['title']}
+              </div>
+              {if $block['desktop']['desc']|default:null}
+                <div class="Hero-itemContentDescription">
+                  {$block['desktop']['desc'] nofilter}
+                </div>
+              {/if}
+              {include file="header_highlights/components/Button.html"
+                href=$block['desktop']['cta_url']
+                level="secondary"
+                text=$block['desktop']['cta_label']
+              }
+            </div>
+          </div>
+        </div>
+      </li>
+    {/foreach}
+  </ul>

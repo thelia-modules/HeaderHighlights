@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<config xmlns="http://thelia.net/schema/dic/config"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://thelia.net/schema/dic/config http://thelia.net/schema/dic/config/thelia-1.0.xsd">
+
+    <hooks>
+        <hook id="header_highlights.hook">
+            <tag name="hook.event_listener" event="header.html" type="front" templates="render:header_highlights/carousel.html" />
+            <tag name="hook.event_listener" event="module.configuration" type="back" templates="render:module_configuration.html" />
+            <tag name="hook.event_listener" event="module.config-js" type="back" templates="js:assets/js/module-configuration.js" />
+        </hook>
+        <hook id="header_highlights.hook.back" class="HeaderHighlights\Hook\BackHook">
+            <tag name="hook.event_listener" event="main.top-menu-tools" type="back" />
+        </hook>
+        <hook id="header.highlights.hook.front" class="HeaderHighlights\Hook\FrontHook">
+            <tag name="hook.event_listener" type="front" event="header.js" method="addHeaderJs"/>
+            <tag name="hook.event_listener" type="front" event="header.css" method="addHeaderCss"/>
+        </hook>
+
+        <!--            -->
+    </hooks>
+</config>

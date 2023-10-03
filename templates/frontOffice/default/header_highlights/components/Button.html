@@ -1,0 +1,24 @@
+
+{$tag = "button"}
+{if $href|default:null}
+    {$tag = "a"}
+{/if}
+
+{$levelClass = ""}
+
+{if $level eq "primary"}
+    {$levelClass = "bg-main hover:bg-main-dark focus:bg-main-dark"}
+{elseif $level eq "secondary"}
+    {$levelClass = "bg-secondary hover:bg-secondary-dark focus:bg-secondary-dark"}
+{/if}
+
+<{$tag}
+{if $href|default:null}href="{$href nofilter}"{else}type="{$type|default:'button'}"{/if}
+{if $id|default:null}id="{$id}"{/if} class="Button btn btn-primary {$class|default:''}" {if
+$disabled|default:null}disabled{/if}
+{if $aria|default:null}aria-label="{$aria nofilter}"{/if}
+{if
+$toggler|default:null}{$toggler}{/if}>
+{$text nofilter}
+{if $icon|default:null}<span class="inline-block align-baseline">{$icon nofilter}</span>{/if}
+</{$tag}>

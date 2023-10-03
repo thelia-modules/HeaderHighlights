@@ -1,0 +1,178 @@
+.Hero {
+  position: relative;
+  display: grid;
+  padding-left: 0;
+  grid-template-rows: 484px 150px 150px;
+  grid-template-columns: 1fr;
+  gap: 2px;
+  width: 100%;
+  overflow: hidden;
+  background-color: white;
+}
+@media (min-width: 640px) {
+  .Hero {
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (min-width: 1024px) {
+  .Hero {
+    grid-template-columns: repeat(2, 1fr);
+    max-height: 735px;
+  }
+}
+@media (min-width: 1280px) {
+  .Hero {
+    grid-template-columns: 61% 1fr;
+  }
+}
+.Hero-item {
+  position: relative;
+  overflow: hidden;
+}
+.Hero-itemContentWrapper {
+  position: absolute;
+  inset: 0px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  pointer-events: none;
+}
+@media (min-width: 1024px) {
+  .Hero-itemContentWrapper {
+    pointer-events: auto;
+  }
+}
+.Hero-itemContent {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: start;
+  align-items: end;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  margin-bottom: 2rem;
+  max-width: 19.875rem;
+}
+@media (min-width: 1280px) {
+  .Hero-itemContentContent {
+    margin-left: 6rem;
+  }
+}
+@media (min-width: 1024px) {
+  .Hero-itemContentContent {
+    margin-left: 4rem;
+  }
+}
+@media (min-width: 768px) {
+  .Hero-itemContent {
+    max-width: 35rem;
+  }
+}
+.Hero-itemContentContainer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+.Hero-itemContentTitle {
+  font-family: DM Serif Display, Source Sans Pro, system-ui;
+  width: 100%;
+  text-transform: uppercase;
+  font-size: 2rem;
+  color: white;
+  line-height: 1.75rem;
+}
+@media (min-width: 1280px) {
+  .Hero-itemContentTitleContentTitle {
+    font-size: 3.75rem;
+    line-height: 1;
+  }
+}
+.Hero-itemContentDescription {
+  color: white;
+}
+@media (min-width: 768px) {
+  .Hero-itemContentDescriptionContentDescription {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
+}
+@media (min-width: 1024px) {
+  .Hero-item:first-child:first-child {
+    grid-row: span 2/span 2;
+  }
+}
+@media (min-width: 640px) {
+  .Hero-item:first-child .sm\:col-span-2 {
+    grid-column: span 2/span 2;
+  }
+}
+@media (min-width: 1024px) {
+  .Hero-item:first-child .lg\:col-span-1 {
+    grid-column: span 1/span 1;
+  }
+}
+.Hero-item:first-child .Hero-itemContent {
+  align-items: end;
+  margin-bottom: 2rem;
+}
+@media (min-width: 640px) {
+  .Hero-item:first-child .Hero-itemContent .Hero-itemContent {
+    align-items: center;
+  }
+}
+@media (min-width: 1024px) {
+  .Hero-item--small .Hero-itemContent .Hero-itemContent {
+    margin-left: 3.5rem;
+  }
+}
+.Hero-item--small .Hero-itemContentTitle {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+@media (min-width: 1280px) {
+  .Hero-item--small .Hero-itemContentTitleTitle {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+  }
+}
+@media (min-width: 640px) {
+  .Hero-item--small .Hero-itemContentTitleTitle {
+    margin-bottom: 1rem;
+  }
+}
+.Hero-image img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+  object-fit: cover;
+  -o-object-position: right center;
+  object-position: right center;
+}
+.Hero .Button {
+  margin-top: 1rem;
+}
+@media (min-width: 640px) {
+  .Hero .Button {
+    display: block;
+  }
+}
+@media (max-width: 640px) {
+  .Hero .Button {
+    display: none;
+  }
+}
+@screen md {
+  .Hero > * {
+    max-width: unset;
+  }
+}
+
+@media (min-width: 768px) {
+  .Hero > * {
+    max-width: none;
+  }
+}

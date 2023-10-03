@@ -1,0 +1,12 @@
+{
+  "name": "your-vendor/header-highlights-module",
+  "description": "HeaderHighlights module for Thelia",
+  "license": "LGPL-3.0-or-later",
+  "type": "thelia-module",
+  "require": {
+    "../../../vendor/thelia/installer": "~1.1"
+  },
+  "extra": {
+    "installer-name": "HeaderHighlights"
+  }
+}

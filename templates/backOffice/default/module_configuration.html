@@ -1,0 +1,99 @@
+{block name="after-admin-css"}
+    {include file="css/module-configuration.css.html"}
+{/block}
+
+{$tab=$smarty.get.tab|default:'desktop'}
+{$imageCount=HeaderHighlights\HeaderHighlights::IMAGE_COUNT}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="general-block-decorator">
+            <div class="row">
+                <div class="col-md-12 title ">
+                    {intl l='Edit your Header' d='headerhighlights.bo.default'}
+                </div>
+
+                <div class="col-md-12">
+                    <ul id="tabbed-menu" class="nav nav-tabs">
+                        <li class="{if $tab eq "desktop"}active{/if}"><a data-toggle="tab" href="#desktop">{intl l="Desktop" d='headerhighlights.bo.default'}</a> </li>
+                        <li class="{if $tab eq "mobile"}active{/if}"><a data-toggle="tab" href="#mobile">{intl l="Mobile" d='headerhighlights.bo.default'}</a> </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        {foreach from=['desktop', 'mobile'] item=screen}
+                            {$current_image_count = {count type="header_highlights_loop" display_type=$screen}}
+
+                            <div id="{$screen}" class="tab-pane {if $tab eq $screen}active{/if} form-container">
+                                <div class="form-container">
+                                    {form name="headerhighlights_form_header_highlights_`$screen`_image_form"}
+                                        <form method="post" action="{url path="/admin/module/HeaderHighlights/update/`$screen`"}" {form_enctype} class="clearfix">
+                                            {include
+                                                file = "includes/inner-form-toolbar.html"
+                                                page_url = {url path='/admin/module/HeaderHighlights'}
+                                                close_url  = {url path='/admin/modules'}
+                                            }
+
+                                            {render_form_field field="success_url" value={url path='/admin/module/HeaderHighlights' tab=$screen}}
+                                            {render_form_field field="error_url" value={url path='/admin/module/HeaderHighlights' tab=$screen}}
+
+                                            {form_hidden_fields}
+
+                                            {if $form_error|default:null}
+                                                <div class="alert alert-danger">{$form_error_message}</div>
+                                            {/if}
+
+                                            {loop type="header_highlights_loop" name="header_highlights_loop" lang=$edit_language_id display_type=$screen}
+                                                {$idx = $ID}
+
+                                                {render_form_field field="display_type`$idx`" value=$screen}
+
+                                                <div class="well well-sm">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            {render_form_field field="title`$idx`" value=$TITLE}
+                                                            {render_form_field field="category`$idx`" value=$CATEGORY}
+                                                            {render_form_field field="call_to_action`$idx`" value=$CTA}
+
+                                                            <div class="mb-2 header-highlights-image">
+                                                                {if $ORIGINAL_IMAGE_URL}
+                                                                <a href="{$ORIGINAL_IMAGE_URL}" target="_blank">
+                                                                    <img src="{$IMAGE_URL}" alt="header-highlights-image-{$ID}">
+                                                                </a>
+                                                                {else}
+                                                                    <div class="alert alert-warning">{intl l="No image uploaded"  d='headerhighlights.bo.default'}</div>
+                                                                {/if}
+                                                            </div>
+                                                            {render_form_field field="image`$idx`" value=$URL}
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            {render_form_field field="url`$idx`" value=$URL}
+                                                            {render_form_field field="catchphrase`$idx`" value=$CATCHPHRASE}
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="form-group text-center">
+                                                                {render_form_field field="image_block`$idx`" value=$IMAGE_BLOCK}
+
+                                                                <label class="control-label text-center" style="display: block">
+                                                                    {intl l="Image position" d='headerhighlights.bo.default'}
+                                                                </label>
+                                                                <div class="grid-{$screen}">
+                                                                    {for $img=1 to $imageCount}
+                                                                    <div class="grid-item grid-item-{$screen} {if $IMAGE_BLOCK == $img}selected{/if}">{$img}</div>
+                                                                    {/for}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {/loop}
+                                        </form>
+                                    {/form}
+                                </div>
+                            </div>
+                        {/foreach}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

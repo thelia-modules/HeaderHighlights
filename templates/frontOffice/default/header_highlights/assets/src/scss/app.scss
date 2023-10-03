@@ -1,0 +1,193 @@
+.Hero {
+  position: relative;
+  display: grid;
+  padding-left: 0;
+  grid-template-rows: 484px 150px 150px;
+  grid-template-columns: 1fr;
+  gap: 2px;
+  width: 100%;
+  overflow: hidden;
+  background-color: white;
+
+  @media (min-width: 640px) {
+    grid-template-rows: repeat(2,1fr);
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(2,1fr);
+    max-height: 735px;
+  }
+
+  @media (min-width: 1280px) {
+    grid-template-columns: 61% 1fr;
+  }
+
+  &-item {
+    position: relative;
+    overflow: hidden;
+
+    &ContentWrapper {
+      position: absolute;
+      inset: 0px;
+      display: flex;
+      width: 100%;
+      pointer-events: none;
+    }
+
+    @media (min-width: 1024px) {
+      &ContentWrapper {
+          pointer-events: auto;
+      }
+  }
+
+    &Content {
+      display: flex;
+      justify-content: start;
+      align-items: end;
+      margin-left: 2rem;
+      margin-right: 2rem;
+      margin-bottom: 2rem;
+      max-width: 19.875rem;
+
+      @media (min-width: 1280px) {
+        &Content {
+            margin-left: 6rem;
+        }
+      }
+      @media (min-width: 1024px) {
+        &Content {
+          margin-left: 4rem;
+        }
+      }
+
+      @media (min-width: 768px) {
+        max-width: 35rem;
+      }
+    }
+
+    &ContentContainer {
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+    }
+
+    &ContentTitle {
+      font-family: DM Serif Display, Source Sans Pro, system-ui;
+      width: 100%;
+      text-transform: uppercase;
+      font-size: 2rem;
+      color: white;
+      line-height: 1.75rem;
+
+      @media (min-width: 1280px) {
+        &ContentTitle {
+            font-size: 3.75rem;
+            line-height: 1;
+        }
+      }
+    }
+
+    &ContentDescription {
+      color: white;
+
+      @media (min-width: 768px) {
+        &ContentDescription {
+            font-size: 1.125rem;
+            line-height: 1.75rem;
+        }
+      }
+    }
+
+    &:first-child {
+      @media (min-width: 1024px) {
+        &:first-child {
+            grid-row: span 2 / span 2;
+        }
+      }
+      @media (min-width: 640px) {
+        .sm\:col-span-2 {
+            grid-column: span 2 / span 2;
+        }
+      }
+      @media (min-width: 1024px) {
+        .lg\:col-span-1 {
+            grid-column: span 1 / span 1;
+        }
+      }
+
+      .Hero-itemContent {
+        align-items: end;
+        margin-bottom: 2rem;
+        @media (min-width: 640px) {
+          .Hero-itemContent {
+              align-items: center;
+          }
+        }
+      }
+    }
+
+    &--small {
+      .Hero-itemContent {
+        @media (min-width: 1024px) {
+          .Hero-itemContent {
+              margin-left: 3.5rem;
+          }
+        }
+
+        &Title {
+          font-size: 1.25rem;
+          line-height: 1.75rem;
+          @media (min-width: 1280px) {
+            &Title {
+                font-size: 2.25rem;
+                line-height: 2.5rem;
+            }
+          }
+          @media (min-width: 640px) {
+            &Title {
+                margin-bottom: 1rem;
+            }
+          }
+        }
+      }
+
+    }
+  }
+
+  &-image {
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: right center;
+    }
+  }
+
+  .Button{
+    margin-top: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .Button {
+        display: block;
+    }
+  }
+  @media (max-width: 640px) {
+    .Button {
+        display: none;
+    }
+  }
+  > * {
+    @screen md {
+      max-width: unset;
+    }
+  }
+}
+
+@media (min-width: 768px){
+  .Hero > * {
+    max-width: none;
+  }
+}

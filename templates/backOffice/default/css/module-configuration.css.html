@@ -1,0 +1,60 @@
+{$imageCount=HeaderHighlights\HeaderHighlights::IMAGE_COUNT}
+<style>
+    .grid-desktop {
+        margin: 0 auto;
+        display: inline-grid;
+        grid-template-columns: 150px 100px;
+        grid-template-rows: auto;
+        gap: 1px;
+    }
+
+    .grid-mobile {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    .grid-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgb(217, 217, 217);
+    }
+
+    .grid-item-mobile:nth-child(1) {
+        height: 100px;
+        width: 80px;
+        margin-bottom: 1px;
+    }
+
+    .grid-item-mobile:nth-child(n+2) {
+        height: 35px;
+        width: 80px;
+        margin-bottom: 1px;
+    }
+
+    .grid-item-desktop:nth-child(1) {
+        grid-row: 1 / span {$imageCount-1};
+    }
+
+    .grid-item-desktop:nth-child(n+2) {
+        padding: 1rem 0;
+        grid-column: span 1;
+    }
+
+    .selected {
+        background-color: rgb(243, 183, 117);
+    }
+
+    .header-highlights-image a img{
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 5px;
+        width: 150px;
+    }
+
+    .submit {
+        margin-left: 90%;
+    }
+</style>
