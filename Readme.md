@@ -16,7 +16,7 @@ This module replace thelia/Carousel
 Add it in your main thelia composer.json file
 
 ```
-composer require your-vendor/header-highlights-module:~1.0
+composer require thelia/header-highlights-module:~1.0
 ```
 
 ## Usage
