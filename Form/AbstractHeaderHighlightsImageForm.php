@@ -48,7 +48,9 @@ abstract class AbstractHeaderHighlightsImageForm extends BaseForm
         }
 
         $images = HeaderHighlightsImageQuery::create()
+            ->useHeaderHighlightsQuery()
             ->filterByDisplayType($this->getDisplayType())
+            ->endUse()
             ->orderByPosition()
             ->find();
 

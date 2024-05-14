@@ -3,6 +3,7 @@
 namespace HeaderHighlights\Controller;
 
 use HeaderHighlights\HeaderHighlights;
+use HeaderHighlights\Model\HeaderHighlights as HeaderHighlightsModel;
 use HeaderHighlights\Form\HeaderHighlightsDesktopImageForm;
 use HeaderHighlights\Form\HeaderHighlightsMobileImageForm;
 use HeaderHighlights\Model\HeaderHighlightsImage;
@@ -46,7 +47,11 @@ class ConfigurationController extends BaseAdminController
         try {
             $formData = $this->validateForm($form)->getData();
 
-            $images = HeaderHighlightsImageQuery::create()->filterByDisplayType($displayType)->find();
+            $images = HeaderHighlightsImageQuery::create()
+                ->useHeaderHighlightsQuery()
+                ->filterByDisplayType($displayType)
+                ->endUse()
+                ->find();
 
             $locale = $this->getCurrentEditionLocale();
 
@@ -58,11 +63,15 @@ class ConfigurationController extends BaseAdminController
             // If some images are missing, recreate them
             for ($idx = 1; $idx <= HeaderHighlights::IMAGE_COUNT; $idx++) {
                 if (0 === HeaderHighlightsImageQuery::create()
+                        ->useHeaderHighlightsQuery()
                         ->filterByDisplayType($displayType)
                         ->filterByImageBlock($idx)
+                        ->endUse()
                         ->count()
                 ) {
-                    (new HeaderHighlightsImage())->createEmptyImage($idx, $displayType)->save();
+                    $emptyHeaderHighLight = (new HeaderHighlightsModel())->createEmptyHeaderHighlights($idx, $displayType);
+                    $emptyHeaderHighLight->save();
+                    (new HeaderHighlightsImage())->createEmptyImage($emptyHeaderHighLight->getId())->save();
                 }
             }
 
@@ -124,15 +133,22 @@ class ConfigurationController extends BaseAdminController
             }
         }
 
-        $headerHighlightsImage
+        $headerHighlights = $headerHighlightsImage->getHeaderHighlights();
+
+        $headerHighlights
             ->setImageBlock($formData['image_block' . $id])
             ->setCategoryId($formData['category' . $id])
             ->setLocale($locale)
             ->setCallToAction($formData['call_to_action' . $id])
             ->setUrl($formData['url' . $id])
             ->setTitle($formData['title' . $id])
-            ->setDescription($formData['catchphrase' . $id])
             ->setDisplayType($formData['display_type' . $id])
+            ->save();
+
+        $headerHighlightsImage
+            ->setLocale($locale)
+            ->setTitle($formData['title' . $id])
+            ->setDescription($formData['catchphrase' . $id])
             ->save();
     }
 }

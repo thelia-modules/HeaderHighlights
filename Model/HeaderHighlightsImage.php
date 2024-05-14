@@ -59,18 +59,10 @@ class HeaderHighlightsImage extends BaseHeaderHighlightsImage implements FileMod
         return HeaderHighlightsImageQuery::create();
     }
 
-    public function createEmptyImage(int $index, string $displayType): self
+    public function createEmptyImage(int $headerHighLightId): self
     {
         $locales = LangQuery::create()->filterByActive(true)->find();
-        $categoryId = CategoryQuery::create()->findOne()->getId();
-
-        $this
-            ->setImageBlock($index)
-            ->setCategoryId($categoryId)
-            ->setCallToAction('')
-            ->setUrl('')
-            ->setDisplayType($displayType);
-
+        $this->setHeaderHighlightsId($headerHighLightId);
         foreach ($locales as $locale) {
             $this
                 ->setLocale($locale->getLocale())
