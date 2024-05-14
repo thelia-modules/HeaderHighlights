@@ -2,6 +2,7 @@
 
 namespace HeaderHighlights;
 
+use HeaderHighlights\Model\HeaderHighlights as HeaderHighlightsModel;
 use HeaderHighlights\Model\HeaderHighlightsImage;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ServicesConfigurator;
@@ -72,7 +73,9 @@ class HeaderHighlights extends BaseModule
 
             foreach (['mobile', 'desktop'] as $displayType) {
                 for ($idx = 1; $idx <= self::IMAGE_COUNT; $idx++) {
-                    (new HeaderHighlightsImage())->createEmptyImage($idx, $displayType)->save();
+                    $emptyHeaderHighLight = (new HeaderHighlightsModel())->createEmptyHeaderHighlights($idx, $displayType);
+                    $emptyHeaderHighLight->save();
+                    (new HeaderHighlightsImage())->createEmptyImage($emptyHeaderHighLight->getId())->save();
                 }
             }
         }

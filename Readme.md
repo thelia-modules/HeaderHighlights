@@ -42,11 +42,12 @@ must provide locale or lang_id parameters
 
 ### Input arguments
 
-| Argument         | Description                              |
-|------------------|------------------------------------------|
-| **locale**       | a string with the local ex: fr_FR        |
-| **lang_id**      | an int matching with the LangId          |
-| **display_type** | a string equals to "desktop" or "mobile" |
+| Argument               | Description                                                   |
+|------------------------|---------------------------------------------------------------|
+| **locale**             | a string with the local ex: fr_FR                             |
+| **lang_id**            | an int matching with the LangId                               |
+| **display_type**       | a string equals to "desktop" or "mobile"                      |
+| **use_thelia_library** | if true, don't generate image cache and set IMAGE_URL to NULL |
 
 ### Output arguments
 
@@ -68,6 +69,16 @@ must provide locale or lang_id parameters
 {loop type="header_highlights_loop" name="header_highlights_loop" locale="$locale"}
     <a href="{$ORIGINAL_IMAGE_URL}" target="_blank">
         <img src="{$IMAGE_URL}" alt="header-highlights-image-{$ID}">
+    </a>
+{/loop}
+```
+
+### Exemple with TheliaLibrary
+
+```
+{loop type="header_highlights_loop" name="header_highlights_loop" locale="$locale" use_thelia_library=true}
+    <a href="{$ORIGINAL_IMAGE_URL}" target="_blank">
+        <img src="/legacy-image-library/headerHighlights_image_{$ID}/full/%5E*!308,308/0/default.webp" alt="header-highlights-image-{$ID}">
     </a>
 {/loop}
 ```

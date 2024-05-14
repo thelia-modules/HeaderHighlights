@@ -12,8 +12,9 @@
 
 namespace HeaderHighlights\Loop;
 
-use HeaderHighlights\Model\HeaderHighlightsImageQuery;
-use HeaderHighlights\Model\Map\HeaderHighlightsImageI18nTableMap;
+use HeaderHighlights\Model\HeaderHighlights as HeaderHighlightsModel;
+use HeaderHighlights\Model\HeaderHighlightsQuery;
+use HeaderHighlights\Model\Map\HeaderHighlightsImageTableMap;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\Exception\PropelException;
 use Thelia\Core\Event\Image\ImageEvent;
@@ -32,6 +33,7 @@ use Thelia\Model\LangQuery;
  * @method getLocale()
  * @method getLangId()
  * @method getDisplayType()
+ * @method getUseTheliaLibrary()
  */
 class HeaderHighlightsLoop extends BaseI18nLoop implements PropelSearchLoopInterface
 {
@@ -42,7 +44,8 @@ class HeaderHighlightsLoop extends BaseI18nLoop implements PropelSearchLoopInter
     {
         return new ArgumentCollection(
             Argument::createIntTypeArgument('lang_id', Lang::getDefaultLanguage()->getId()),
-            Argument::createAlphaNumStringTypeArgument('display_type', null, true)
+            Argument::createAlphaNumStringTypeArgument('display_type', null, true),
+            Argument::createBooleanTypeArgument('use_thelia_library', false)
         );
     }
 
@@ -53,14 +56,16 @@ class HeaderHighlightsLoop extends BaseI18nLoop implements PropelSearchLoopInter
      */
     public function parseResults(LoopResult $loopResult): LoopResult
     {
+        /** @var HeaderHighlightsModel $headerHighlights */
         foreach ($loopResult->getResultDataCollection() as $headerHighlights)
         {
             $loopResultRow = new LoopResultRow($headerHighlights);
 
             $fileUrl = $originalFileUrl = null;
 
-            if (! empty($headerHighlights->getFile())) {
-                $imgSourcePath = $headerHighlights->getUploadDir() . DS . $headerHighlights->getFile();
+            $headerHighlightsImage = $headerHighlights->getHeaderHighlightsImages()->getFirst();
+            if (!$this->getUseTheliaLibrary() && !empty($headerHighlightsImage->getFile())) {
+                $imgSourcePath = $headerHighlightsImage->getUploadDir() . DS . $headerHighlightsImage->getFile();
 
                 $event = new ImageEvent();
                 $event->setSourceFilepath($imgSourcePath)
@@ -78,7 +83,7 @@ class HeaderHighlightsLoop extends BaseI18nLoop implements PropelSearchLoopInter
                 ->set('TITLE', $headerHighlights->getVirtualColumn("i18n_TITLE"))
                 ->set('CATEGORY', $headerHighlights->getCategoryId())
                 ->set('CTA', $headerHighlights->getVirtualColumn("i18n_CALL_TO_ACTION"))
-                ->set('CATCHPHRASE', $headerHighlights->getVirtualColumn("i18n_DESCRIPTION"))
+                ->set('CATCHPHRASE', $headerHighlights->getVirtualColumn("header_highlights_image_i18n_DESCRIPTION"))
                 ->set('URL', $headerHighlights->getVirtualColumn("i18n_URL"))
                 ->set('IMAGE_URL', $fileUrl)
                 ->set('ORIGINAL_IMAGE_URL', $originalFileUrl)
@@ -92,26 +97,33 @@ class HeaderHighlightsLoop extends BaseI18nLoop implements PropelSearchLoopInter
         return $loopResult;
     }
 
-
     /**
      * this method returns a Propel ModelCriteria.
      *
      * @return ModelCriteria
+     * @throws PropelException
      */
     public function buildModelCriteria(): ModelCriteria
     {
-        $query = HeaderHighlightsImageQuery::create();
+        $query = HeaderHighlightsQuery::create();
 
+        $this->configureI18nProcessing(
+            $query,
+            [
+                'TITLE',
+                'CALL_TO_ACTION',
+                'URL'
+            ]
+        );
         $this->configureI18nProcessing(
             $query,
             [
                 'TITLE',
                 'CHAPO',
                 'DESCRIPTION',
-                'POSTSCRIPTUM',
-                'CALL_TO_ACTION',
-                'URL'
-            ]
+                'POSTSCRIPTUM'
+            ],
+            HeaderHighlightsImageTableMap::getTableMap()->getName()
         );
 
         $query
