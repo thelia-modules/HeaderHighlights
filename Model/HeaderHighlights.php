@@ -24,6 +24,7 @@ class HeaderHighlights extends BaseHeaderHighlights
 
         $this
             ->setCategoryId($categoryId)
+            ->setImageBlock($index)
             ->setDisplayType($displayType);
 
         foreach ($locales as $locale) {
