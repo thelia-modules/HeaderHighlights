@@ -10,6 +10,7 @@ use HeaderHighlights\Model\HeaderHighlightsImage;
 use HeaderHighlights\Model\HeaderHighlightsImageQuery;
 use Exception;
 use Propel\Runtime\Exception\PropelException;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -150,5 +151,17 @@ class ConfigurationController extends BaseAdminController
             ->setTitle($formData['title' . $id])
             ->setDescription($formData['catchphrase' . $id])
             ->save();
+
+        $this->emptyImageCache($headerHighlightsImage->getId());
+    }
+
+    private function emptyImageCache($imageId)
+    {
+        $cacheDir = THELIA_WEB_DIR."legacy-image-library".DS.'headerHighlights_image_'.$imageId;
+
+        $fs = new Filesystem();
+        if (is_dir($cacheDir)){
+            $fs->remove($cacheDir);
+        }
     }
 }
