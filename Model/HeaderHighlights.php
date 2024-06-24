@@ -20,12 +20,13 @@ class HeaderHighlights extends BaseHeaderHighlights
     public function createEmptyHeaderHighlights(int $index, string $displayType): self
     {
         $locales = LangQuery::create()->filterByActive(true)->find();
-        $categoryId = CategoryQuery::create()->findOne()->getId();
 
-        $this
-            ->setCategoryId($categoryId)
-            ->setImageBlock($index)
-            ->setDisplayType($displayType);
+        if (null !== $category = CategoryQuery::create()->findOne()) {
+            $this
+                ->setCategoryId($category->getId())
+                ->setImageBlock($index)
+                ->setDisplayType($displayType);
+        }
 
         foreach ($locales as $locale) {
             $this
