@@ -64,26 +64,33 @@ class HeaderHighlightsLoop extends BaseI18nLoop implements PropelSearchLoopInter
             $fileUrl = $originalFileUrl = null;
 
             $headerHighlightsImage = $headerHighlights->getHeaderHighlightsImages()->getFirst();
-            if (!$this->getUseTheliaLibrary() && !empty($headerHighlightsImage->getFile())) {
-                $imgSourcePath = $headerHighlightsImage->getUploadDir() . DS . $headerHighlightsImage->getFile();
 
-                $event = new ImageEvent();
-                $event->setSourceFilepath($imgSourcePath)
-                    ->setCacheSubdirectory('carousel');
+            try {
+                if (!!$headerHighlightsImage && !$this->getUseTheliaLibrary() && !empty($headerHighlightsImage->getFile())) {
+                    $imgSourcePath = $headerHighlightsImage->getUploadDir() . DS . $headerHighlightsImage->getFile();
 
-                // Dispatch image processing event
-                $this->dispatcher->dispatch($event, TheliaEvents::IMAGE_PROCESS);
+                    $event = new ImageEvent();
+                    $event->setSourceFilepath($imgSourcePath)
+                        ->setCacheSubdirectory('carousel');
 
-                $fileUrl = $event->getFileUrl();
-                $originalFileUrl = $event->getOriginalFileUrl();
+                    // Dispatch image processing event
+                    $this->dispatcher->dispatch($event, TheliaEvents::IMAGE_PROCESS);
+
+                    $fileUrl = $event->getFileUrl();
+                    $originalFileUrl = $event->getOriginalFileUrl();
+                }
+
+            } catch (\Exception $e) {
+
             }
 
             $loopResultRow
                 ->set('ID', $headerHighlights->getId())
+                ->set('IMAGE_ID', $headerHighlightsImage?->getId())
                 ->set('TITLE', $headerHighlights->getVirtualColumn("i18n_TITLE"))
                 ->set('CATEGORY', $headerHighlights->getCategoryId())
                 ->set('CTA', $headerHighlights->getVirtualColumn("i18n_CALL_TO_ACTION"))
-                ->set('CATCHPHRASE', $headerHighlights->getVirtualColumn("header_highlights_image_i18n_DESCRIPTION"))
+                ->set('CATCHPHRASE', $headerHighlights->getVirtualColumn("i18n_CATCHPHRASE"))
                 ->set('URL', $headerHighlights->getVirtualColumn("i18n_URL"))
                 ->set('IMAGE_URL', $fileUrl)
                 ->set('ORIGINAL_IMAGE_URL', $originalFileUrl)
@@ -112,18 +119,9 @@ class HeaderHighlightsLoop extends BaseI18nLoop implements PropelSearchLoopInter
             [
                 'TITLE',
                 'CALL_TO_ACTION',
-                'URL'
+                'URL',
+                "CATCHPHRASE"
             ]
-        );
-        $this->configureI18nProcessing(
-            $query,
-            [
-                'TITLE',
-                'CHAPO',
-                'DESCRIPTION',
-                'POSTSCRIPTUM'
-            ],
-            HeaderHighlightsImageTableMap::getTableMap()->getName()
         );
 
         $query
