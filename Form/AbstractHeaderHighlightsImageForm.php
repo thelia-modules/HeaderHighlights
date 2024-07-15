@@ -46,17 +46,9 @@ abstract class AbstractHeaderHighlightsImageForm extends BaseForm
 
             $categoriesArray[$categoryTitle] = $category->getId();
         }
-
-        $images = HeaderHighlightsImageQuery::create()
-            ->useHeaderHighlightsQuery()
-            ->filterByDisplayType($this->getDisplayType())
-            ->endUse()
-            ->orderByPosition()
-            ->find();
-
         /** @var HeaderHighlightsImage $carousel */
-        foreach ($images as $image) {
-            $id = $image->getId();
+        for ($i = 1; $i <=3; $i++) {
+            $id = $i;
 
             $this->formBuilder
                 ->add(

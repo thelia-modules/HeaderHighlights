@@ -9,6 +9,7 @@ use HeaderHighlights\Form\HeaderHighlightsMobileImageForm;
 use HeaderHighlights\Model\HeaderHighlightsImage;
 use HeaderHighlights\Model\HeaderHighlightsImageQuery;
 use Exception;
+use HeaderHighlights\Model\HeaderHighlightsQuery;
 use Propel\Runtime\Exception\PropelException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -19,7 +20,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\Event\File\FileCreateOrUpdateEvent;
-use Thelia\Core\Event\File\FileDeleteEvent;
 use Thelia\Core\Event\TheliaEvents;
 use Thelia\Core\Form\TheliaFormFactory;
 use Thelia\Core\Template\ParserContext;
@@ -48,32 +48,10 @@ class ConfigurationController extends BaseAdminController
         try {
             $formData = $this->validateForm($form)->getData();
 
-            $images = HeaderHighlightsImageQuery::create()
-                ->useHeaderHighlightsQuery()
-                ->filterByDisplayType($displayType)
-                ->endUse()
-                ->find();
-
             $locale = $this->getCurrentEditionLocale();
 
-            /** @var HeaderHighlightsImage $carousel */
-            foreach ($images as $image) {
-                $this->headerHighlights($eventDispatcher, $requestStack, $image, $locale, $formData);
-            }
-
-            // If some images are missing, recreate them
-            for ($idx = 1; $idx <= HeaderHighlights::IMAGE_COUNT; $idx++) {
-                if (0 === HeaderHighlightsImageQuery::create()
-                        ->useHeaderHighlightsQuery()
-                        ->filterByDisplayType($displayType)
-                        ->filterByImageBlock($idx)
-                        ->endUse()
-                        ->count()
-                ) {
-                    $emptyHeaderHighLight = (new HeaderHighlightsModel())->createEmptyHeaderHighlights($idx, $displayType);
-                    $emptyHeaderHighLight->save();
-                    (new HeaderHighlightsImage())->createEmptyImage($emptyHeaderHighLight->getId())->save();
-                }
+            for ($i = 1; $i <=3; $i++) {
+                $this->saveHeaderHighlight($eventDispatcher, $formData, $locale, $i,$displayType);
             }
 
             return $this->generateSuccessRedirect($form);
@@ -95,24 +73,30 @@ class ConfigurationController extends BaseAdminController
     /**
      * @throws PropelException
      */
-    private function headerHighlights(
-        EventDispatcherInterface $eventDispatcher,
-        RequestStack $requestStack,
-        HeaderHighlightsImage $headerHighlightsImage,
+    private function saveHeaderHighlight( EventDispatcherInterface $eventDispatcher,
+        $formData,
         $locale,
-        $formData
-    )
-    {
-        $id = $headerHighlightsImage->getId();
+        $idx,
+        $displayType
+    ) {
+
+        $headerHighlights = HeaderHighlightsQuery::create()
+            ->filterByDisplayType($displayType)
+            ->filterByImageBlock($idx)
+            ->findOne();
+        $headerHighlightsImage = HeaderHighlightsImageQuery::create()
+            ->filterByHeaderHighlightsId($headerHighlights->getId())
+            ->findOneOrCreate();
 
         /** @var UploadedFile $fileBeingUploaded */
-        $fileBeingUploaded = $formData['image' . $id];
+        $fileBeingUploaded = $formData['image' . $idx];
+
 
         if (null !== $fileBeingUploaded) {
             $fileCreateOrUpdateEvent = new FileCreateOrUpdateEvent(1);
             $fileCreateOrUpdateEvent->setModel($headerHighlightsImage);
-            $fileCreateOrUpdateEvent->setUploadedFile($fileBeingUploaded);
 
+            $fileCreateOrUpdateEvent->setUploadedFile($fileBeingUploaded);
 
             if (empty($headerHighlightsImage->getFile())){
                 $eventNameImage = TheliaEvents::IMAGE_SAVE;
@@ -122,10 +106,18 @@ class ConfigurationController extends BaseAdminController
                 $fileCreateOrUpdateEvent->setOldModel($headerHighlightsImage);
                 $eventNameImage = TheliaEvents::IMAGE_UPDATE;
             }
-            $eventDispatcher->dispatch(
-                $fileCreateOrUpdateEvent,
-                $eventNameImage
-            );
+            try {
+                $eventDispatcher->dispatch(
+                    $fileCreateOrUpdateEvent,
+                    $eventNameImage
+                );
+            } catch (\Exception $e) {
+                // On IMAGE_UPDATE, if image file has been deleted it will throw an error
+                $eventDispatcher->dispatch(
+                    $fileCreateOrUpdateEvent,
+                    TheliaEvents::IMAGE_SAVE
+                );
+            }
 
             $langs = LangQuery::create()->find();
 
@@ -137,19 +129,19 @@ class ConfigurationController extends BaseAdminController
         $headerHighlights = $headerHighlightsImage->getHeaderHighlights();
 
         $headerHighlights
-            ->setImageBlock($formData['image_block' . $id])
-            ->setCategoryId($formData['category' . $id])
+            ->setImageBlock($formData['image_block' . $idx])
+            ->setCategoryId($formData['category' . $idx])
             ->setLocale($locale)
-            ->setCallToAction($formData['call_to_action' . $id])
-            ->setUrl($formData['url' . $id])
-            ->setTitle($formData['title' . $id])
-            ->setDisplayType($formData['display_type' . $id])
+            ->setCallToAction($formData['call_to_action' . $idx])
+            ->setUrl($formData['url' . $idx])
+            ->setTitle($formData['title' . $idx])
+            ->setDisplayType($formData['display_type' . $idx])
+            ->setCatchphrase($formData['catchphrase' . $idx])
             ->save();
 
         $headerHighlightsImage
             ->setLocale($locale)
-            ->setTitle($formData['title' . $id])
-            ->setDescription($formData['catchphrase' . $id])
+            ->setTitle($formData['title' . $idx])
             ->save();
 
         $this->emptyImageCache($headerHighlightsImage->getId());

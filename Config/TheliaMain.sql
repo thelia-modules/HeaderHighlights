@@ -63,6 +63,7 @@ CREATE TABLE `header_highlights_i18n`
     `title` VARCHAR(255),
     `call_to_action` VARCHAR(255),
     `url` VARCHAR(255),
+    `catchphrase` VARCHAR(255),
     PRIMARY KEY (`id`,`locale`),
     CONSTRAINT `header_highlights_i18n_fk_2edfcb`
         FOREIGN KEY (`id`)
@@ -85,7 +86,7 @@ CREATE TABLE `header_highlights_image_i18n`
     `chapo` TEXT,
     `postscriptum` TEXT,
     PRIMARY KEY (`id`,`locale`),
-    CONSTRAINT `header_highlights_image_i18n_fk_7068c5`
+    CONSTRAINT `header_highlights_image_i18n_fk_7068c6`
         FOREIGN KEY (`id`)
         REFERENCES `header_highlights_image` (`id`)
         ON DELETE CASCADE

@@ -42,50 +42,78 @@
                                                 <div class="alert alert-danger">{$form_error_message}</div>
                                             {/if}
 
+                                            {$images = []}
                                             {loop type="header_highlights_loop" name="header_highlights_loop" lang=$edit_language_id display_type=$screen}
-                                                {$idx = $ID}
+                                                {$images[$IMAGE_BLOCK] = [
+                                                'ORIGINAL_IMAGE_URL' => $ORIGINAL_IMAGE_URL,
+                                                'IMAGE_URL' => $IMAGE_URL,
+                                                'CATCHPHRASE' => $CATCHPHRASE,
+                                                'IMAGE_BLOCK' => $IMAGE_BLOCK,
+                                                'TITLE' => $TITLE,
+                                                'CATEGORY' => $CATEGORY,
+                                                'CTA' => $CTA,
+                                                'URL' => $URL,
+                                                'ID' => $ID
+                                                ]}
+                                            {/loop}
+{*                                            {$images|@var_dump}*}
+                                            {for $position=1 to 3}
+                                                {if !$images[$position]}
+                                                    {$images[$position] = [
+                                                    'ORIGINAL_IMAGE_URL' => '',
+                                                    'IMAGE_URL' => '',
+                                                    'CATCHPHRASE' => '',
+                                                    'IMAGE_BLOCK' => $position,
+                                                    'TITLE' => '',
+                                                    'CATEGORY' => '',
+                                                    'CTA' => '',
+                                                    'URL' => '',
+                                                    'ID' => ''
+                                                    ]}
+                                                {/if}
+                                                {$idx = $position}
 
                                                 {render_form_field field="display_type`$idx`" value=$screen}
 
                                                 <div class="well well-sm">
                                                     <div class="row">
                                                         <div class="col-md-4">
-                                                            {render_form_field field="title`$idx`" value=$TITLE}
-                                                            {render_form_field field="category`$idx`" value=$CATEGORY}
-                                                            {render_form_field field="call_to_action`$idx`" value=$CTA}
+                                                            {render_form_field field="title`$idx`" value=$images[$idx]['TITLE']}
+                                                            {render_form_field field="category`$idx`" value=$images[$idx]['CATEGORY']}
+                                                            {render_form_field field="call_to_action`$idx`" value=$images[$idx]['CTA']}
 
                                                             <div class="mb-2 header-highlights-image">
-                                                                {if $ORIGINAL_IMAGE_URL}
-                                                                <a href="{$ORIGINAL_IMAGE_URL}" target="_blank">
-                                                                    <img src="{$IMAGE_URL}" alt="header-highlights-image-{$ID}">
+                                                                {if $images[$idx]['ORIGINAL_IMAGE_URL']}
+                                                                <a href="{$images[$idx]['ORIGINAL_IMAGE_URL']}" target="_blank">
+                                                                    <img src="{$images[$idx]['IMAGE_URL']}" alt="header-highlights-image-{$images[$idx]['ID']}">
                                                                 </a>
                                                                 {else}
                                                                     <div class="alert alert-warning">{intl l="No image uploaded"  d='headerhighlights.bo.default'}</div>
                                                                 {/if}
                                                             </div>
-                                                            {render_form_field field="image`$idx`" value=$URL}
+                                                            {render_form_field field="image`$idx`" value=$images[$idx]['URL']}
                                                         </div>
                                                         <div class="col-md-4">
-                                                            {render_form_field field="url`$idx`" value=$URL}
-                                                            {render_form_field field="catchphrase`$idx`" value=$CATCHPHRASE}
+                                                            {render_form_field field="url`$idx`" value=$images[$idx]['URL']}
+                                                            {render_form_field field="catchphrase`$idx`" value=$images[$idx]['CATCHPHRASE']}
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="form-group text-center">
-                                                                {render_form_field field="image_block`$idx`" value=$IMAGE_BLOCK}
+                                                                {render_form_field field="image_block`$idx`" value=$images[$idx]['IMAGE_BLOCK']}
 
                                                                 <label class="control-label text-center" style="display: block">
                                                                     {intl l="Image position" d='headerhighlights.bo.default'}
                                                                 </label>
                                                                 <div class="grid-{$screen}">
                                                                     {for $img=1 to $imageCount}
-                                                                    <div class="grid-item grid-item-{$screen} {if $IMAGE_BLOCK == $img}selected{/if}">{$img}</div>
+                                                                    <div class="grid-item grid-item-{$screen} {if $images[$idx]['IMAGE_BLOCK'] == $img}selected{/if}">{$img}</div>
                                                                     {/for}
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            {/loop}
+                                            {/for}
                                         </form>
                                     {/form}
                                 </div>
