@@ -87,6 +87,7 @@ class HeaderHighlightsLoop extends BaseI18nLoop implements PropelSearchLoopInter
             $loopResultRow
                 ->set('ID', $headerHighlights->getId())
                 ->set('IMAGE_ID', $headerHighlightsImage?->getId())
+                ->set('UPDATE_AT', $headerHighlightsImage?->getUpdatedAt()?->format('Y-m-d'))
                 ->set('TITLE', $headerHighlights->getVirtualColumn("i18n_TITLE"))
                 ->set('CATEGORY', $headerHighlights->getCategoryId())
                 ->set('CTA', $headerHighlights->getVirtualColumn("i18n_CALL_TO_ACTION"))
