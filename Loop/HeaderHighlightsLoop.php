@@ -27,6 +27,8 @@ use Thelia\Core\Template\Loop\Argument\Argument;
 use Thelia\Core\Template\Loop\Argument\ArgumentCollection;
 use Thelia\Model\Lang;
 use Thelia\Model\LangQuery;
+use Thelia\Type\EnumType;
+use Thelia\Type\TypeCollection;
 
 
 /**
@@ -34,6 +36,10 @@ use Thelia\Model\LangQuery;
  * @method getLangId()
  * @method getDisplayType()
  * @method getUseTheliaLibrary()
+ * @method getWidth()
+ * @method getHeight()
+ * @method getResizeMode()
+ * @method getFormat()
  */
 class HeaderHighlightsLoop extends BaseI18nLoop implements PropelSearchLoopInterface
 {
@@ -43,9 +49,19 @@ class HeaderHighlightsLoop extends BaseI18nLoop implements PropelSearchLoopInter
     protected function getArgDefinitions(): ArgumentCollection
     {
         return new ArgumentCollection(
+            Argument::createIntTypeArgument('width'),
+            Argument::createIntTypeArgument('height'),
             Argument::createIntTypeArgument('lang_id', Lang::getDefaultLanguage()->getId()),
             Argument::createAlphaNumStringTypeArgument('display_type', null, true),
-            Argument::createBooleanTypeArgument('use_thelia_library', false)
+            Argument::createBooleanTypeArgument('use_thelia_library', false),
+            new Argument(
+                'resize_mode',
+                new TypeCollection(
+                    new EnumType(['crop', 'borders', 'none'])
+                ),
+                'none'
+            ),
+            Argument::createAlphaNumStringTypeArgument('format')
         );
     }
 
@@ -70,6 +86,37 @@ class HeaderHighlightsLoop extends BaseI18nLoop implements PropelSearchLoopInter
                     $imgSourcePath = $headerHighlightsImage->getUploadDir() . DS . $headerHighlightsImage->getFile();
 
                     $event = new ImageEvent();
+
+                    switch ($this->getResizeMode()) {
+                        case 'crop':
+                            $resize_mode = \Thelia\Action\Image::EXACT_RATIO_WITH_CROP;
+                            break;
+                        case 'borders':
+                            $resize_mode = \Thelia\Action\Image::EXACT_RATIO_WITH_BORDERS;
+                            break;
+                        case 'none':
+                        default:
+                            $resize_mode = \Thelia\Action\Image::KEEP_IMAGE_RATIO;
+                    }
+
+                    $width = $this->getWidth();
+                    $height = $this->getHeight();
+                    $format = $this->getFormat();
+
+                    if (null !== $width) {
+                        $event->setWidth($width);
+                    }
+
+                    if (null !== $height) {
+                        $event->setHeight($height);
+                    }
+
+                    $event->setResizeMode($resize_mode);
+
+                    if (null !== $format) {
+                        $event->setFormat($format);
+                    }
+
                     $event->setSourceFilepath($imgSourcePath)
                         ->setCacheSubdirectory('carousel');
 
