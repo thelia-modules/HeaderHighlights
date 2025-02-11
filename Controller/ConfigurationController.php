@@ -83,10 +83,12 @@ class ConfigurationController extends BaseAdminController
         $headerHighlights = HeaderHighlightsQuery::create()
             ->filterByDisplayType($displayType)
             ->filterByImageBlock($idx)
-            ->findOne();
+            ->findOneOrCreate();
         $headerHighlightsImage = HeaderHighlightsImageQuery::create()
             ->filterByHeaderHighlightsId($headerHighlights->getId())
             ->findOneOrCreate();
+
+        $headerHighlightsImage->setHeaderHighlights($headerHighlights);
 
         /** @var UploadedFile $fileBeingUploaded */
         $fileBeingUploaded = $formData['image' . $idx];
