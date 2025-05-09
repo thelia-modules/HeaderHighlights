@@ -15,6 +15,7 @@ namespace HeaderHighlights\Loop;
 use HeaderHighlights\Model\HeaderHighlights as HeaderHighlightsModel;
 use HeaderHighlights\Model\HeaderHighlightsQuery;
 use HeaderHighlights\Model\Map\HeaderHighlightsImageTableMap;
+use HeaderHighlights\Services\ImageService;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\Exception\PropelException;
 use Thelia\Core\Event\Image\ImageEvent;
@@ -43,11 +44,17 @@ use Thelia\Type\TypeCollection;
  */
 class HeaderHighlightsLoop extends BaseI18nLoop implements PropelSearchLoopInterface
 {
+    public function __construct(private ImageService $imageService)
+    {
+    }
+
     /**
      * {@inheritdoc}
      */
     protected function getArgDefinitions(): ArgumentCollection
     {
+
+
         return new ArgumentCollection(
             Argument::createIntTypeArgument('width'),
             Argument::createIntTypeArgument('height'),
@@ -77,59 +84,16 @@ class HeaderHighlightsLoop extends BaseI18nLoop implements PropelSearchLoopInter
         {
             $loopResultRow = new LoopResultRow($headerHighlights);
 
-            $fileUrl = $originalFileUrl = null;
-
             $headerHighlightsImage = $headerHighlights->getHeaderHighlightsImages()->getFirst();
 
-            try {
-                if (!!$headerHighlightsImage && !$this->getUseTheliaLibrary() && !empty($headerHighlightsImage->getFile())) {
-                    $imgSourcePath = $headerHighlightsImage->getUploadDir() . DS . $headerHighlightsImage->getFile();
-
-                    $event = new ImageEvent();
-
-                    switch ($this->getResizeMode()) {
-                        case 'crop':
-                            $resize_mode = \Thelia\Action\Image::EXACT_RATIO_WITH_CROP;
-                            break;
-                        case 'borders':
-                            $resize_mode = \Thelia\Action\Image::EXACT_RATIO_WITH_BORDERS;
-                            break;
-                        case 'none':
-                        default:
-                            $resize_mode = \Thelia\Action\Image::KEEP_IMAGE_RATIO;
-                    }
-
-                    $width = $this->getWidth();
-                    $height = $this->getHeight();
-                    $format = $this->getFormat();
-
-                    if (null !== $width) {
-                        $event->setWidth($width);
-                    }
-
-                    if (null !== $height) {
-                        $event->setHeight($height);
-                    }
-
-                    $event->setResizeMode($resize_mode);
-
-                    if (null !== $format) {
-                        $event->setFormat($format);
-                    }
-
-                    $event->setSourceFilepath($imgSourcePath)
-                        ->setCacheSubdirectory('carousel');
-
-                    // Dispatch image processing event
-                    $this->dispatcher->dispatch($event, TheliaEvents::IMAGE_PROCESS);
-
-                    $fileUrl = $event->getFileUrl();
-                    $originalFileUrl = $event->getOriginalFileUrl();
-                }
-
-            } catch (\Exception $e) {
-
-            }
+            [$fileUrl, $originalFileUrl] = $this->imageService->imageProcess(
+                headerHighlightsImage: $headerHighlightsImage,
+                useTheliaLibrary: $this->getUseTheliaLibrary(),
+                resizeMode: $this->getResizeMode(),
+                width: $this->getWidth(),
+                height: $this->getHeight(),
+                format: $this->getFormat(),
+            );
 
             $loopResultRow
                 ->set('ID', $headerHighlights->getId())
