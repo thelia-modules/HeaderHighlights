@@ -70,14 +70,17 @@ class HeaderHighlights extends BaseModule
             $database->insertSql(null, [__DIR__ . "/Config/TheliaMain.sql"]);
             self::setConfigValue('is_initialized', 1);
 
-
+            /** @todo => in SQL file
             foreach (['mobile', 'desktop'] as $displayType) {
+                
                 for ($idx = 1; $idx <= self::IMAGE_COUNT; $idx++) {
                     $emptyHeaderHighLight = (new HeaderHighlightsModel())->createEmptyHeaderHighlights($idx, $displayType);
                     $emptyHeaderHighLight->save();
                     (new HeaderHighlightsImage())->createEmptyImage($emptyHeaderHighLight->getId())->save();
                 }
+                
             }
+            **/
         }
     }
 
