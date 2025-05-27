@@ -1,0 +1,50 @@
+<div {{atributes}}>
+	{% set mobils = this.images|filter(i => i.headerHighlights.displayType == 'mobile') %}
+	{% set desktops = this.images|filter(i => i.headerHighlights.displayType == 'desktop') %}
+
+
+	<ul class="Hero {% if desktops|length == 2 %}Hero--split{% elseif desktops|length == 1 %}Hero--full{% endif %}">
+		{% for desktop in desktops %}
+			<li class="Hero-item">
+				<picture class="Hero-image">
+					<source media="(min-width: 640px)" srcset="{{ asset('dist/images/placeholder.png') }} 1x">
+					<img src="{{ asset('dist/images/placeholder.png') }}" alt="" loading=" lazy" class="w-full">
+				</picture>
+				<div class="Hero-itemContentWrapper">
+					<div class="Hero-itemContent">
+						<div class="Hero-itemContentContainer">
+							<div class='{{ loop.index != 1 ? "paragraph-4" : "paragraph-1" }} Hero-itemContentTitle font-bold'>
+								<span class="hidden lg:block">{{ desktop.headerHighlights.i18ns.title  }}</span>
+								<span class="lg:hidden">{{ mobils[loop.index - 1].headerHighlights.i18ns.title  }}</span>
+							</div>
+							<div class="Hero-itemContentDesc">
+								<span class="hidden lg:block">{{ desktop.headerHighlights.i18ns.catchphrase  }}</span>
+								<span class="lg:hidden">{{ mobils[loop.index- 1].headerHighlights.i18ns.catchphrase  }}</span>
+							</div>
+							<div class="hidden lg:block">
+								{% include '@components/Molecules/Button/Button.html.twig' with {
+                                    text: desktop.headerHighlights.i18ns.callToAction,
+                                    href: desktop.headerHighlights.i18ns.url,
+                                    type: 'primary',
+                                    icon_right: "chevron-right",
+                                    isFill: true,
+                                    classes: loop.index == 1 ? "Button--large" : "Button--small"
+                                } %}
+							</div>
+							<div class="lg:hidden">
+								{% include '@components/Molecules/Button/Button.html.twig' with {
+                                    text: mobils[loop.index -1].headerHighlights.i18ns.callToAction,
+                                    href: mobils[loop.index -1].headerHighlights.i18ns.url,
+                                    type: 'primary',
+                                    icon_right: "chevron-right",
+                                    isFill: true,
+                                    classes: loop.index == 1 ? "Button--large" : "Button--small"
+                                } %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</li>
+		{% endfor %}
+	</ul>
+</div>
