@@ -5,15 +5,17 @@
 				<figure class="Hero-image">
 					<img src="{{ asset('dist/images/placeholder.png') }}" alt="" loading=" lazy" class="w-full">
 				</figure>
-				<div class="Hero-contain ">
+				<div class="Hero-contain">
 					<div class='{{ loop.index != 1 ? "paragraph-4" : "paragraph-1" }} Hero-title'>
 						<span class="hidden lg:block">{{ desktop.headerHighlights.i18ns.title  }}</span>
 						<span class="lg:hidden">{{ mobiles[loop.index - 1].headerHighlights.i18ns.title  }}</span>
 					</div>
-					<div class="Hero-desc">
-						<span class="hidden lg:block">{{ desktop.headerHighlights.i18ns.catchphrase  }}</span>
-						<span class="lg:hidden">{{ mobiles[loop.index- 1].headerHighlights.i18ns.catchphrase  }}</span>
-					</div>
+					{% if desktop.headerHighlights.i18ns.catchphrase or mobiles[loop.index- 1].headerHighlights.i18ns.catchphrase %}
+						<div class="Hero-desc">
+							<span class="hidden lg:block">{{ desktop.headerHighlights.i18ns.catchphrase  }}</span>
+							<span class="lg:hidden">{{ mobiles[loop.index- 1].headerHighlights.i18ns.catchphrase  }}</span>
+						</div>
+					{% endif %}
 					<div class="hidden lg:block">
 						{% include '@components/Molecules/Button/Button.html.twig' with {
 							text: desktop.headerHighlights.i18ns.callToAction,

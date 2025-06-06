@@ -22,7 +22,6 @@ class HeaderHighlights
     #[ExposeInTemplate()]
     public array $desktops = [];
 
-
     #[ExposeInTemplate()]
     public array $mobiles = [];
 
@@ -34,12 +33,11 @@ class HeaderHighlights
     public function getImages(): array
     {
         return $this->dataAccessService->resources('/api/header-highlights');
-
     }
 
     public function getDesktops(): array
     {
-        return  array_filter($this->getImages(), function ($image) {
+        return array_filter($this->getImages(), function ($image) {
             return $image['headerHighlights']['displayType'] == 'desktop';
         });
     }
