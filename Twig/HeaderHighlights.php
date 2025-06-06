@@ -10,14 +10,22 @@
  * file that was distributed with this source code.
  */
 
-namespace HeaderHighlights\Twig\Layout;
+namespace HeaderHighlights\Twig;
 
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use TwigEngine\Service\DataAccess\DataAccessService;
 
 #[AsTwigComponent(name: 'HeaderHighlights', template: '@HeaderHighlightsModule/components/HeaderHighlights.html.twig')]
 class HeaderHighlights
 {
+    #[ExposeInTemplate()]
+    public array $desktops = [];
+
+
+    #[ExposeInTemplate()]
+    public array $mobiles = [];
+
     public function __construct(private DataAccessService $dataAccessService)
     {
         $this->dataAccessService = $dataAccessService;
@@ -26,5 +34,26 @@ class HeaderHighlights
     public function getImages(): array
     {
         return $this->dataAccessService->resources('/api/header-highlights');
+
+    }
+
+    public function getDesktops(): array
+    {
+        return  array_filter($this->getImages(), function ($image) {
+            return $image['headerHighlights']['displayType'] == 'desktop';
+        });
+    }
+
+    public function getMobiles(): array
+    {
+        $mobiles = array_filter($this->getImages(), function ($image) {
+            return $image['headerHighlights']['displayType'] == 'mobile';
+        });
+
+        if (empty($mobiles)) {
+            $mobiles = $this->getDesktops();
+        }
+
+        return $mobiles;
     }
 }
