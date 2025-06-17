@@ -46,7 +46,8 @@ readonly class HeaderHighlightsNormalizer implements NormalizerInterface
 
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        return ($context['operation_name'] ?? null) === HeaderHighlightsImage::ROUTE_NAME_GET_COLLECTION;
+        $operationName = $context['root_operation_name'] ?? (isset($context['operation']) ? $context['operation']->getName() : null);
+        return $operationName === HeaderHighlightsImage::ROUTE_NAME_GET_COLLECTION;
     }
 
     public function getSupportedTypes(?string $format): array
