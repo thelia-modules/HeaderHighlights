@@ -97,7 +97,7 @@ class HeaderHighlights extends BaseModule
         return $uploadDir.DS.self::DOMAIN_NAME;
     }
 
-    public function getHooks()
+    public function getHooks(): array
     {
         return [
             [
