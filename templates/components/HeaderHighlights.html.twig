@@ -1,24 +1,25 @@
 <div {{atributes}}>
-	<ul class="Hero {% if desktops|length == 2 %}Hero--split{% elseif desktops|length == 1 %}Hero--full{% endif %}">
-		{% for desktop in desktops %}
-			<li class="Hero-item">
-				<figure class="Hero-image">
-					<source media="(min-width: 1024px)" srcset="{{desktop.fileUrl}}">
-					<img src="{{mobiles[loop.index - 1].fileUrl}}" alt="" loading=" lazy" class="w-full">
-				</figure>
-				<div class="Hero-contain">
-					<div class='{{ loop.index != 1 ? "paragraph-4" : "paragraph-1" }} Hero-title'>
-						<span class="hidden lg:block">{{ desktop.headerHighlights.i18ns.title  }}</span>
-						<span class="lg:hidden">{{ mobiles[loop.index - 1].headerHighlights.i18ns.title  }}</span>
-					</div>
-					{% if desktop.headerHighlights.i18ns.catchphrase or mobiles[loop.index- 1].headerHighlights.i18ns.catchphrase %}
-						<div class="Hero-desc">
-							<span class="hidden lg:block">{{ desktop.headerHighlights.i18ns.catchphrase  }}</span>
-							<span class="lg:hidden">{{ mobiles[loop.index- 1].headerHighlights.i18ns.catchphrase  }}</span>
+	{% if desktops|length %}
+		<ul class="Hero {% if desktops|length == 2 %}Hero--split{% elseif desktops|length == 1 %}Hero--full{% endif %}">
+			{% for desktop in desktops %}
+				<li class="Hero-item">
+					<figure class="Hero-image">
+						<source media="(min-width: 1024px)" srcset="{{desktop.fileUrl}}">
+						<img src="{{mobiles[loop.index - 1].fileUrl}}" alt="{{desktop.headerHighlights.i18ns.title}}" loading=" lazy" class="w-full">
+					</figure>
+					<div class="Hero-contain">
+						<div class='{{ loop.index != 1 ? "paragraph-4" : "paragraph-1" }} Hero-title'>
+							<span class="hidden lg:block">{{ desktop.headerHighlights.i18ns.title  }}</span>
+							<span class="lg:hidden">{{ mobiles[loop.index - 1].headerHighlights.i18ns.title  }}</span>
 						</div>
-					{% endif %}
-					<div class="hidden lg:block">
-						{% include '@components/Molecules/Button/Button.html.twig' with {
+						{% if desktop.headerHighlights.i18ns.catchphrase or mobiles[loop.index- 1].headerHighlights.i18ns.catchphrase %}
+							<div class="Hero-desc">
+								<span class="hidden lg:block">{{ desktop.headerHighlights.i18ns.catchphrase  }}</span>
+								<span class="lg:hidden">{{ mobiles[loop.index- 1].headerHighlights.i18ns.catchphrase  }}</span>
+							</div>
+						{% endif %}
+						<div class="hidden lg:block">
+							{% include '@components/Molecules/Button/Button.html.twig' with {
 							text: desktop.headerHighlights.i18ns.callToAction,
 							href: desktop.headerHighlights.i18ns.url,
 							type: 'primary',
@@ -26,9 +27,9 @@
 							isFill: true,
 							classes: loop.index == 1 ? "Button--medium" : "Button--small"
 						} %}
-					</div>
-					<div class=" lg:hidden">
-						{% include '@components/Molecules/Button/Button.html.twig' with {
+						</div>
+						<div class="lg:hidden">
+							{% include '@components/Molecules/Button/Button.html.twig' with {
 							text: mobiles[loop.index -1].headerHighlights.i18ns.callToAction,
 							href: mobiles[loop.index -1].headerHighlights.i18ns.url,
 							type: 'primary',
@@ -36,9 +37,10 @@
 							isFill: true,
 							classes: loop.index == 1 ? "Button--medium" : "Button--small"
 						} %}
+						</div>
 					</div>
-				</div>
-			</li>
-		{% endfor %}
-	</ul>
+				</li>
+			{% endfor %}
+		</ul>
+	{% endif %}
 </div>
