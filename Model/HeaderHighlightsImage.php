@@ -22,7 +22,7 @@ use Thelia\Model\LangQuery;
 class HeaderHighlightsImage extends BaseHeaderHighlightsImage implements FileModelInterface
 {
 
-    public function setParentId($parentId): HeaderHighlightsImage|static
+    public function setParentId($parentId): static
     {
         return $this;
     }
@@ -32,7 +32,7 @@ class HeaderHighlightsImage extends BaseHeaderHighlightsImage implements FileMod
         return $this->getId();
     }
 
-    public function getParentFileModel(): FileModelParentInterface|static
+    public function getParentFileModel(): FileModelParentInterface
     {
         return new static();
     }
@@ -71,5 +71,10 @@ class HeaderHighlightsImage extends BaseHeaderHighlightsImage implements FileMod
         }
 
         return $this;
+    }
+
+    public function getFile(): string
+    {
+        return parent::getFile();
     }
 }
