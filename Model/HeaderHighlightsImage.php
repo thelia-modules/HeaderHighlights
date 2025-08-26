@@ -5,9 +5,8 @@ namespace HeaderHighlights\Model;
 use HeaderHighlights\HeaderHighlights;
 use HeaderHighlights\Model\Base\HeaderHighlightsImage as BaseHeaderHighlightsImage;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
-use Thelia\Files\FileModelInterface;
-use Thelia\Files\FileModelParentInterface;
-use Thelia\Model\CategoryQuery;
+use Thelia\Core\File\FileModelInterface;
+use Thelia\Core\File\FileModelParentInterface;
 use Thelia\Model\LangQuery;
 
 /**
