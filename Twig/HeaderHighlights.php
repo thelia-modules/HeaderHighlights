@@ -14,7 +14,7 @@ namespace HeaderHighlights\Twig;
 
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
-use TwigEngine\Service\DataAccess\DataAccessService;
+use Thelia\Api\Service\DataAccess\DataAccessService;
 
 #[AsTwigComponent(name: 'HeaderHighlights', template: '@HeaderHighlightsModule/components/HeaderHighlights.html.twig')]
 class HeaderHighlights
