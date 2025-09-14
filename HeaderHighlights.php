@@ -8,7 +8,7 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ServicesConfigurator;
 use Symfony\Component\Finder\Finder;
 use Thelia\Core\Template\TemplateDefinition;
-use Thelia\Install\Database;
+use Thelia\Core\Install\Database;
 use Thelia\Model\Base\CategoryQuery;
 use Thelia\Model\ConfigQuery;
 use Thelia\Model\LangQuery;
