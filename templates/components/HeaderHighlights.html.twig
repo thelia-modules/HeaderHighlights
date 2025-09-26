@@ -19,24 +19,22 @@
 							</div>
 						{% endif %}
 						<div class="hidden lg:block">
-							{% include '@components/Molecules/Button/Button.html.twig' with {
-							text: desktop.headerHighlights.i18ns.callToAction,
-							href: desktop.headerHighlights.i18ns.url,
-							type: 'primary',
-							icon_right: "chevron-right",
-							isFill: true,
-							classes: loop.index == 1 ? "Button--medium" : "Button--small"
-						} %}
+							{{ component('Flexy:Button', {
+								text: desktop.headerHighlights.i18ns.callToAction,
+								href: desktop.headerHighlights.i18ns.url,
+								icon_right: "chevron-right",
+								isFill: true,
+								size: loop.index == 1 ? "medium" : "small"
+							}) }}
 						</div>
 						<div class="lg:hidden">
-							{% include '@components/Molecules/Button/Button.html.twig' with {
-							text: mobiles[loop.index -1].headerHighlights.i18ns.callToAction,
-							href: mobiles[loop.index -1].headerHighlights.i18ns.url,
-							type: 'primary',
-							icon_right: "chevron-right",
-							isFill: true,
-							classes: loop.index == 1 ? "Button--medium" : "Button--small"
-						} %}
+							{{ component('Flexy:Button', {
+								text: mobiles[loop.index -1].headerHighlights.i18ns.callToAction,
+								href: mobiles[loop.index -1].headerHighlights.i18ns.url,
+								icon_right: "chevron-right",
+								isFill: true,
+								size: loop.index == 1 ? "medium" : "small"
+							}) }}
 						</div>
 					</div>
 				</li>
