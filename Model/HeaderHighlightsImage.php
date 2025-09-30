@@ -74,6 +74,6 @@ class HeaderHighlightsImage extends BaseHeaderHighlightsImage implements FileMod
 
     public function getFile(): string
     {
-        return parent::getFile();
+        return parent::getFile() ?? '';
     }
 }

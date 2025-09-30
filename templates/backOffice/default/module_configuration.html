@@ -58,7 +58,7 @@
                                             {/loop}
 {*                                            {$images|@var_dump}*}
                                             {for $position=1 to 3}
-                                                {if !$images[$position]}
+                                                {if !isset($images[$position])}
                                                     {$images[$position] = [
                                                     'ORIGINAL_IMAGE_URL' => '',
                                                     'IMAGE_URL' => '',
