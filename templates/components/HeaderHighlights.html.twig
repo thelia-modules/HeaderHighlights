@@ -2,10 +2,12 @@
 	{% if desktops|length %}
 		<ul class="Hero {% if desktops|length == 2 %}Hero--split{% elseif desktops|length == 1 %}Hero--full{% endif %}">
 			{% for desktop in desktops %}
+				{% set width = loop.index != 1 ? 186 : 414 %}
+				{% set height = loop.index != 1 ? 120 : 210 %}
 				<li class="Hero-item">
 					<picture class="Hero-image">
 						<source media="(min-width: 1024px)" srcset="{{desktop.fileUrl}}">
-						<img src="{{mobiles[loop.index - 1].fileUrl}}" alt="{{desktop.headerHighlights.i18ns.title}}" class="w-full">
+						<img src="{{mobiles[loop.index - 1].fileUrl}}" alt="{{desktop.headerHighlights.i18ns.title}}" width="{{ width }}" height="{{ height }}" class="w-full">
 					</picture>
 					<div class="Hero-contain">
 						<div class='{{ loop.index != 1 ? "paragraph-4" : "paragraph-1" }} Hero-title'>
