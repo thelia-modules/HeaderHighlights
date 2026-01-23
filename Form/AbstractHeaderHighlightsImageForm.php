@@ -38,7 +38,7 @@ abstract class AbstractHeaderHighlightsImageForm extends BaseForm
         $categoriesArray = [];
         $categories = (new CategoryQuery)->find();
         $lang = $this->request->getSession()->get('thelia.current.lang');
-        $categoriesArray["Sélectionner une valeur"] = "";
+        $categoriesArray[Translator::getInstance()->trans('Choose a category', [], HeaderHighlights::DOMAIN_NAME)] = "";
         foreach ($categories as $category) {
             $categoryTitle = $category
                 ->getTranslation($lang->getLocale())
