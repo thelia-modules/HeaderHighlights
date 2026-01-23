@@ -132,7 +132,7 @@ class ConfigurationController extends BaseAdminController
 
         $headerHighlights
             ->setImageBlock($formData['image_block' . $idx])
-            ->setCategoryId($formData['category' . $idx])
+            ->setCategoryId($formData['category' . $idx] === "" ? null : $formData['category' . $idx])
             ->setLocale($locale)
             ->setCallToAction($formData['call_to_action' . $idx])
             ->setUrl($formData['url' . $idx])
