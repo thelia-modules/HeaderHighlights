@@ -13,11 +13,11 @@
         <language>en_US</language>
         <language>fr_FR</language>
     </languages>
-    <version>1.1.8</version>
+    <version>1.1.10</version>
     <authors>
         <author>
-            <name>Loïc MO</name>
-            <email>lmo@openstudio.fr</email>
+            <name>Openstudio</name>
+            <email>pbaguet@openstudio.fr</email>
         </author>
     </authors>
     <type>classic</type>
