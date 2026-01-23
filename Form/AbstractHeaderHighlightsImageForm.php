@@ -40,7 +40,7 @@ abstract class AbstractHeaderHighlightsImageForm extends BaseForm
         $lang = ($this->request->hasSession()
             ? $this->request->getSession()->get('thelia.current.lang')
             : null) ?? \Thelia\Model\Lang::getDefaultLanguage();
-
+        $categoriesArray["Sélectionner une valeur"] = "";
         foreach ($categories as $category) {
             $categoryTitle = $category
                 ->getTranslation($lang->getLocale())
@@ -62,7 +62,7 @@ abstract class AbstractHeaderHighlightsImageForm extends BaseForm
                     'title' . $id,
                     TextType::class,
                     [
-                        'required' => true,
+                        'required' => false,
                         'label' => Translator::getInstance()->trans('Title', [], HeaderHighlights::DOMAIN_NAME),
                         'label_attr' => [
                             'for' => 'title_field',
@@ -81,7 +81,7 @@ abstract class AbstractHeaderHighlightsImageForm extends BaseForm
                         'label_attr' => [
                             'for' => 'category',
                         ],
-                        'required' => true,
+                        'required' => false,
                         'attr' => [
                             'placeholder' => Translator::getInstance()->trans(
                                 'Category',
@@ -98,6 +98,7 @@ abstract class AbstractHeaderHighlightsImageForm extends BaseForm
                         'label_attr' => [
                             'for' => 'call_to_action',
                         ],
+                        'required' => false,
                         'attr' => [
                             'placeholder' => Translator::getInstance()->trans('Button Libelle', [], HeaderHighlights::DOMAIN_NAME),
                             'maxlength' => 50
@@ -111,6 +112,7 @@ abstract class AbstractHeaderHighlightsImageForm extends BaseForm
                         'label_attr' => [
                             'for' => 'url',
                         ],
+                        'required' => false,
                         'attr' => [
                             'placeholder' => Translator::getInstance()->trans('Button Link', [], HeaderHighlights::DOMAIN_NAME),
                         ]
