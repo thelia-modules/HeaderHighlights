@@ -5,6 +5,7 @@ return array(
     'Button Link' => 'Lien de votre bouton',
     'Catchphrase' => 'Accroche',
     'Category' => 'Categorie',
+    'Choose a category' => 'Choisissez une categorie',
     'Edit your Header' => 'Modifier vos encarts d\'accueil',
     'Header Image does not exist' => 'L\'encart n\'existe pas',
     'Header title' => 'Titre de votre encart',
