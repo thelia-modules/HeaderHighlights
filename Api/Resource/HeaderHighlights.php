@@ -6,7 +6,6 @@ use ApiPlatform\Metadata\ApiResource;
 use HeaderHighlights\Model\Map\HeaderHighlightsTableMap;
 use Propel\Runtime\Map\TableMap;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Serializer\Annotation\Ignore;
 use Thelia\Api\Bridge\Propel\Attribute\Relation;
 use Thelia\Api\Resource\AbstractTranslatableResource;
 use Thelia\Api\Resource\Category;
@@ -100,7 +99,7 @@ class HeaderHighlights extends AbstractTranslatableResource
         return $this;
     }
 
-    #[Ignore] public static function getPropelRelatedTableMap(): ?TableMap
+    public static function getPropelRelatedTableMap(): ?TableMap
     {
         return new HeaderHighlightsTableMap();
     }

@@ -8,7 +8,6 @@ use ApiPlatform\Metadata\GetCollection;
 use HeaderHighlights\Model\Map\HeaderHighlightsImageTableMap;
 use Propel\Runtime\Map\TableMap;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Serializer\Annotation\Ignore;
 use Thelia\Api\Bridge\Propel\Attribute\Relation;
 use Thelia\Api\Bridge\Propel\Filter\BooleanFilter;
 use Thelia\Api\Bridge\Propel\Filter\OrderFilter;
@@ -190,7 +189,7 @@ class HeaderHighlightsImage extends AbstractTranslatableResource
         return $this;
     }
 
-    #[Ignore] public static function getPropelRelatedTableMap(): ?TableMap
+    public static function getPropelRelatedTableMap(): ?TableMap
     {
         return new HeaderHighlightsImageTableMap();
     }
