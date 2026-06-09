@@ -1,0 +1,12 @@
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('a.image-delete').forEach(function (el) {
+        el.addEventListener('click', function () {
+            var target = document.getElementById('image_delete_id');
+            if (target) {
+                target.value = el.dataset.id;
+            }
+        });
+    });
+});
+</script>

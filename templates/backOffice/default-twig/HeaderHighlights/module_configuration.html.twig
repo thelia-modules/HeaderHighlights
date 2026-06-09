@@ -1,0 +1,273 @@
+<style>
+    .grid-desktop {
+        margin: 0 auto;
+        display: inline-grid;
+        grid-template-columns: 150px 100px;
+        grid-template-rows: auto;
+        gap: 1px;
+    }
+
+    .grid-mobile {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    .grid-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgb(217, 217, 217);
+    }
+
+    .grid-item-mobile:nth-child(1) {
+        height: 100px;
+        width: 80px;
+        margin-bottom: 1px;
+    }
+
+    .grid-item-mobile:nth-child(n+2) {
+        height: 35px;
+        width: 80px;
+        margin-bottom: 1px;
+    }
+
+    .grid-item-desktop:nth-child(1) {
+        grid-row: 1 / span {{ image_count - 1 }};
+    }
+
+    .grid-item-desktop:nth-child(n+2) {
+        padding: 1rem 0;
+        grid-column: span 1;
+    }
+
+    .selected {
+        background-color: rgb(243, 183, 117);
+    }
+
+    .header-highlights-image a img {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 5px;
+        width: 150px;
+    }
+</style>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="card-title mb-0">{{ 'Edit your Header'|trans({}, 'headerhighlights.bo.default') }}</h5>
+    </div>
+    <div class="card-body">
+        <ul class="nav nav-tabs mb-3" id="headerHighlightsTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link {{ tab == 'desktop' ? 'active' : '' }}"
+                        id="desktop-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#desktop"
+                        type="button"
+                        role="tab">
+                    {{ 'Desktop'|trans({}, 'headerhighlights.bo.default') }}
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link {{ tab == 'mobile' ? 'active' : '' }}"
+                        id="mobile-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#mobile"
+                        type="button"
+                        role="tab">
+                    {{ 'Mobile'|trans({}, 'headerhighlights.bo.default') }}
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            {# Desktop tab #}
+            <div id="desktop" class="tab-pane {{ tab == 'desktop' ? 'active show' : '' }}" role="tabpanel">
+                {{ form_start(form_desktop, {
+                    method: 'post',
+                    action: path('headerHighlights_config_update', {displayType: 'desktop'}),
+                    attr: {enctype: 'multipart/form-data', class: 'clearfix'}
+                }) }}
+                {{ form_widget(form_desktop.success_url, {value: path('admin.module.configure', {module_code: 'HeaderHighlights', tab: 'desktop'})}) }}
+                {{ form_widget(form_desktop.error_url, {value: path('admin.module.configure', {module_code: 'HeaderHighlights', tab: 'desktop'})}) }}
+                {% do form_desktop.success_url.setRendered %}
+                {% do form_desktop.error_url.setRendered %}
+
+                {% for position in 1..image_count %}
+                    {% set img = images_desktop[position] ?? {ID: '', TITLE: '', CATEGORY: '', CTA: '', URL: '', CATCHPHRASE: '', IMAGE_URL: '', ORIGINAL_IMAGE_URL: '', IMAGE_BLOCK: position} %}
+
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        {{ form_label(form_desktop['title' ~ position]) }}
+                                        {{ form_widget(form_desktop['title' ~ position], {value: img.TITLE}) }}
+                                        {{ form_errors(form_desktop['title' ~ position]) }}
+                                    </div>
+                                    <div class="mb-3">
+                                        {{ form_label(form_desktop['category' ~ position]) }}
+                                        {{ form_widget(form_desktop['category' ~ position], {value: img.CATEGORY}) }}
+                                        {{ form_errors(form_desktop['category' ~ position]) }}
+                                    </div>
+                                    <div class="mb-3">
+                                        {{ form_label(form_desktop['call_to_action' ~ position]) }}
+                                        {{ form_widget(form_desktop['call_to_action' ~ position], {value: img.CTA}) }}
+                                        {{ form_errors(form_desktop['call_to_action' ~ position]) }}
+                                    </div>
+                                    <div class="mb-3 header-highlights-image">
+                                        {% if img.ORIGINAL_IMAGE_URL %}
+                                            <a href="{{ img.ORIGINAL_IMAGE_URL }}" target="_blank">
+                                                <img src="{{ img.IMAGE_URL }}" alt="header-highlights-image-{{ img.ID }}" class="img-fluid">
+                                            </a>
+                                        {% else %}
+                                            <div class="alert alert-warning">{{ 'No image uploaded'|trans({}, 'headerhighlights.bo.default') }}</div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="mb-3">
+                                        {{ form_label(form_desktop['image' ~ position]) }}
+                                        {{ form_widget(form_desktop['image' ~ position]) }}
+                                        {{ form_errors(form_desktop['image' ~ position]) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        {{ form_label(form_desktop['url' ~ position]) }}
+                                        {{ form_widget(form_desktop['url' ~ position], {value: img.URL}) }}
+                                        {{ form_errors(form_desktop['url' ~ position]) }}
+                                    </div>
+                                    <div class="mb-3">
+                                        {{ form_label(form_desktop['catchphrase' ~ position]) }}
+                                        {{ form_widget(form_desktop['catchphrase' ~ position], {value: img.CATCHPHRASE}) }}
+                                        {{ form_errors(form_desktop['catchphrase' ~ position]) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3 text-center">
+                                        {{ form_widget(form_desktop['image_block' ~ position], {value: img.IMAGE_BLOCK}) }}
+                                        {% do form_desktop['image_block' ~ position].setRendered %}
+                                        {{ form_widget(form_desktop['display_type' ~ position], {value: 'desktop'}) }}
+                                        {% do form_desktop['display_type' ~ position].setRendered %}
+                                        <label class="form-label text-center d-block">
+                                            {{ 'Image position'|trans({}, 'headerhighlights.bo.default') }}
+                                        </label>
+                                        <div class="grid-desktop">
+                                            {% for img_pos in 1..image_count %}
+                                                <div class="grid-item grid-item-desktop {{ img.IMAGE_BLOCK == img_pos ? 'selected' : '' }}">{{ img_pos }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                <div class="d-flex justify-content-end mt-3">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i>
+                        {{ 'Save'|trans }}
+                    </button>
+                </div>
+
+                {{ form_rest(form_desktop) }}
+                {{ form_end(form_desktop, {render_rest: false}) }}
+            </div>
+
+            {# Mobile tab #}
+            <div id="mobile" class="tab-pane {{ tab == 'mobile' ? 'active show' : '' }}" role="tabpanel">
+                {{ form_start(form_mobile, {
+                    method: 'post',
+                    action: path('headerHighlights_config_update', {displayType: 'mobile'}),
+                    attr: {enctype: 'multipart/form-data', class: 'clearfix'}
+                }) }}
+                {{ form_widget(form_mobile.success_url, {value: path('admin.module.configure', {module_code: 'HeaderHighlights', tab: 'mobile'})}) }}
+                {{ form_widget(form_mobile.error_url, {value: path('admin.module.configure', {module_code: 'HeaderHighlights', tab: 'mobile'})}) }}
+                {% do form_mobile.success_url.setRendered %}
+                {% do form_mobile.error_url.setRendered %}
+
+                {% for position in 1..image_count %}
+                    {% set img = images_mobile[position] ?? {ID: '', TITLE: '', CATEGORY: '', CTA: '', URL: '', CATCHPHRASE: '', IMAGE_URL: '', ORIGINAL_IMAGE_URL: '', IMAGE_BLOCK: position} %}
+
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        {{ form_label(form_mobile['title' ~ position]) }}
+                                        {{ form_widget(form_mobile['title' ~ position], {value: img.TITLE}) }}
+                                        {{ form_errors(form_mobile['title' ~ position]) }}
+                                    </div>
+                                    <div class="mb-3">
+                                        {{ form_label(form_mobile['category' ~ position]) }}
+                                        {{ form_widget(form_mobile['category' ~ position], {value: img.CATEGORY}) }}
+                                        {{ form_errors(form_mobile['category' ~ position]) }}
+                                    </div>
+                                    <div class="mb-3">
+                                        {{ form_label(form_mobile['call_to_action' ~ position]) }}
+                                        {{ form_widget(form_mobile['call_to_action' ~ position], {value: img.CTA}) }}
+                                        {{ form_errors(form_mobile['call_to_action' ~ position]) }}
+                                    </div>
+                                    <div class="mb-3 header-highlights-image">
+                                        {% if img.ORIGINAL_IMAGE_URL %}
+                                            <a href="{{ img.ORIGINAL_IMAGE_URL }}" target="_blank">
+                                                <img src="{{ img.IMAGE_URL }}" alt="header-highlights-image-{{ img.ID }}" class="img-fluid">
+                                            </a>
+                                        {% else %}
+                                            <div class="alert alert-warning">{{ 'No image uploaded'|trans({}, 'headerhighlights.bo.default') }}</div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="mb-3">
+                                        {{ form_label(form_mobile['image' ~ position]) }}
+                                        {{ form_widget(form_mobile['image' ~ position]) }}
+                                        {{ form_errors(form_mobile['image' ~ position]) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        {{ form_label(form_mobile['url' ~ position]) }}
+                                        {{ form_widget(form_mobile['url' ~ position], {value: img.URL}) }}
+                                        {{ form_errors(form_mobile['url' ~ position]) }}
+                                    </div>
+                                    <div class="mb-3">
+                                        {{ form_label(form_mobile['catchphrase' ~ position]) }}
+                                        {{ form_widget(form_mobile['catchphrase' ~ position], {value: img.CATCHPHRASE}) }}
+                                        {{ form_errors(form_mobile['catchphrase' ~ position]) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3 text-center">
+                                        {{ form_widget(form_mobile['image_block' ~ position], {value: img.IMAGE_BLOCK}) }}
+                                        {% do form_mobile['image_block' ~ position].setRendered %}
+                                        {{ form_widget(form_mobile['display_type' ~ position], {value: 'mobile'}) }}
+                                        {% do form_mobile['display_type' ~ position].setRendered %}
+                                        <label class="form-label text-center d-block">
+                                            {{ 'Image position'|trans({}, 'headerhighlights.bo.default') }}
+                                        </label>
+                                        <div class="grid-mobile">
+                                            {% for img_pos in 1..image_count %}
+                                                <div class="grid-item grid-item-mobile {{ img.IMAGE_BLOCK == img_pos ? 'selected' : '' }}">{{ img_pos }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                <div class="d-flex justify-content-end mt-3">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i>
+                        {{ 'Save'|trans }}
+                    </button>
+                </div>
+
+                {{ form_rest(form_mobile) }}
+                {{ form_end(form_mobile, {render_rest: false}) }}
+            </div>
+        </div>
+    </div>
+</div>

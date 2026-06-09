@@ -7,6 +7,18 @@ use Thelia\Core\Hook\BaseHook;
 
 class FrontHook extends BaseHook
 {
+    public static function getSubscribedHooks(): array
+    {
+        return [
+            'header.js' => [
+                ['type' => 'front', 'method' => 'addHeaderJs'],
+            ],
+            'header.css' => [
+                ['type' => 'front', 'method' => 'addHeaderCss'],
+            ],
+        ];
+    }
+
     public function addHeaderJs(HookRenderEvent $event)
     {
         $js = $this->addJS('header_highlights/assets/dist/js/app.js');
