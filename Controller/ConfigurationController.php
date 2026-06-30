@@ -29,7 +29,7 @@ use Thelia\Model\LangQuery;
 #[Route('/admin/module/HeaderHighlights', name: 'headerHighlights_config_')]
 class ConfigurationController extends BaseAdminController
 {
-    #[Route('/update/{displayType}', name: 'update', methods: 'POST')]
+    #[Route('/update/{displayType}', name: 'update', methods: 'POST', requirements: ['displayType' => 'mobile|desktop'])]
     public function updateImage(
         EventDispatcherInterface $eventDispatcher,
         ParserContext $parserContext,
@@ -50,7 +50,7 @@ class ConfigurationController extends BaseAdminController
 
             $locale = $this->getCurrentEditionLocale();
 
-            for ($i = 1; $i <=3; $i++) {
+            for ($i = 1; $i <= HeaderHighlights::IMAGE_COUNT; $i++) {
                 $this->saveHeaderHighlight($eventDispatcher, $formData, $locale, $i,$displayType);
             }
 
