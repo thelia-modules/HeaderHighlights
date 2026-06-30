@@ -2,6 +2,7 @@
 
 namespace HeaderHighlights\Services;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Thelia\Action\Image;
 use Thelia\Core\Event\Image\ImageEvent;
@@ -10,12 +11,10 @@ use Thelia\Core\Event\TheliaEvents;
 class ImageService
 {
 
-    private EventDispatcherInterface $dispatcher;
-
-
-    public function __construct(EventDispatcherInterface $dispatcher)
-    {
-        $this->dispatcher = $dispatcher;
+    public function __construct(
+        private EventDispatcherInterface $dispatcher,
+        private LoggerInterface $logger
+    ) {
     }
 
 
@@ -65,7 +64,7 @@ class ImageService
                 $originalFileUrl = $event->getOriginalFileUrl();
             }
         } catch (\Exception $e) {
-
+            $this->logger->error('HeaderHighlights: image processing failed', ['exception' => $e]);
         }
         return [$fileUrl, $originalFileUrl];
     }
