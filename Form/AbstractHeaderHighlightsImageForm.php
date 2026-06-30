@@ -49,7 +49,7 @@ abstract class AbstractHeaderHighlightsImageForm extends BaseForm
             $categoriesArray[$categoryTitle] = $category->getId();
         }
         /** @var HeaderHighlightsImage $carousel */
-        for ($i = 1; $i <=3; $i++) {
+        for ($i = 1; $i <= HeaderHighlights::IMAGE_COUNT; $i++) {
             $id = $i;
 
             $this->formBuilder
