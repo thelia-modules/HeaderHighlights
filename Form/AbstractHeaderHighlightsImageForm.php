@@ -37,7 +37,9 @@ abstract class AbstractHeaderHighlightsImageForm extends BaseForm
     {
         $categoriesArray = [];
         $categories = (new CategoryQuery)->find();
-        $lang = $this->request->getSession()->get('thelia.current.lang');
+        $lang = ($this->request->hasSession()
+            ? $this->request->getSession()->get('thelia.current.lang')
+            : null) ?? \Thelia\Model\Lang::getDefaultLanguage();
 
         foreach ($categories as $category) {
             $categoryTitle = $category

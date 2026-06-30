@@ -49,7 +49,9 @@ class ConfigHook extends BaseHook
     public function onModuleConfiguration(HookRenderEvent $event): void
     {
         $request = $this->getRequest();
-        $locale = $request?->getSession()?->get('thelia.current.lang')?->getLocale() ?? 'en_US';
+        $locale = (null !== $request && $request->hasSession())
+            ? ($request->getSession()->get('thelia.current.lang')?->getLocale() ?? 'en_US')
+            : (LangQuery::create()->findOneByByDefault(true)?->getLocale() ?? 'en_US');
         $tab = $request?->query->get('tab', 'desktop') ?? 'desktop';
 
         $imagesDesktop = $this->buildImagesData('desktop', $locale);
