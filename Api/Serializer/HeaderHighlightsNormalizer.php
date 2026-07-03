@@ -33,9 +33,9 @@ readonly class HeaderHighlightsNormalizer implements NormalizerInterface
             headerHighlightsImage: $headerHighlightImage->getPropelModel(),
             useTheliaLibrary: $request->get('use_thelia_library'),
             resizeMode: $request->get('resize_mode'),
-            width: $request->get('width'),
+            width: $request->get('width') ?? 1920,
             height: $request->get('height'),
-            format: $request->get('format'),
+            format: $request->get('format') ?? 'webp',
         );
         $headerHighlightImage
             ->setFileUrl($fileUrl)
