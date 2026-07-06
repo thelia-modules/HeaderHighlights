@@ -29,16 +29,44 @@ readonly class HeaderHighlightsNormalizer implements NormalizerInterface
         /** @var HeaderHighlightsImage $headerHighlightImage */
         $headerHighlightImage = $object;
 
+        $useTheliaLibrary = $request->get('use_thelia_library');
+        $resizeMode = $request->get('resize_mode');
+        $format = $request->get('format') ?? 'webp';
+        $quality = (int) ($request->get('quality') ?? 70);
+
+        $widthDesktop = (int) ($request->get('width') ?? 1280);
+        $widthMobile = (int) ($request->get('width_mobile') ?? 768);
+
+        // Thelia's legacy image cache keys the file name on getOptionsHash(), which
+        // is empty when height is null. A null height would make the desktop and
+        // mobile renders collide on the same cache file. Bound by a square box
+        // (height = width) so the hash differs per size while KEEP_IMAGE_RATIO stays
+        // width-driven for the landscape hero (no upscale, no borders).
+        $height = $request->get('height');
+
         [$fileUrl, $originalFileUrl] = $this->imageService->imageProcess(
             headerHighlightsImage: $headerHighlightImage->getPropelModel(),
-            useTheliaLibrary: $request->get('use_thelia_library'),
-            resizeMode: $request->get('resize_mode'),
-            width: $request->get('width') ?? 1920,
-            height: $request->get('height'),
-            format: $request->get('format') ?? 'webp',
+            useTheliaLibrary: $useTheliaLibrary,
+            resizeMode: $resizeMode,
+            width: $widthDesktop,
+            height: $height ?? $widthDesktop,
+            format: $format,
+            quality: $quality,
         );
+
+        [$fileUrlMobile] = $this->imageService->imageProcess(
+            headerHighlightsImage: $headerHighlightImage->getPropelModel(),
+            useTheliaLibrary: $useTheliaLibrary,
+            resizeMode: $resizeMode,
+            width: $widthMobile,
+            height: $height ?? $widthMobile,
+            format: $format,
+            quality: $quality,
+        );
+
         $headerHighlightImage
             ->setFileUrl($fileUrl)
+            ->setFileUrlMobile($fileUrlMobile)
             ->setOriginalFileUrl($originalFileUrl);
 
         return $this->normalizer->normalize($object, $format, $context);
