@@ -18,7 +18,7 @@ class ImageService
     }
 
 
-    public function imageProcess($headerHighlightsImage,$useTheliaLibrary,$resizeMode,$width,$height,$format): array
+    public function imageProcess($headerHighlightsImage,$useTheliaLibrary,$resizeMode,$width,$height,$format,$quality = null): array
     {
         $fileUrl = $originalFileUrl = null;
 
@@ -50,8 +50,18 @@ class ImageService
 
                 $event->setResizeMode($resize_mode);
 
+                // ImageEvent::getOptionsHash() returns '' unless width, height,
+                // resize_mode AND background_color are all set. Without it every
+                // size collides on the same cache file (-<source>.webp). Only used
+                // to fill borders (EXACT_RATIO_WITH_BORDERS), inert for KEEP_IMAGE_RATIO.
+                $event->setBackgroundColor('ffffff');
+
                 if (null !== $format) {
                     $event->setFormat($format);
+                }
+
+                if (null !== $quality) {
+                    $event->setQuality((int) $quality);
                 }
 
                 $event->setSourceFilepath($imgSourcePath)

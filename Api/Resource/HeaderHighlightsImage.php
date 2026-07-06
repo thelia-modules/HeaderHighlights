@@ -84,6 +84,9 @@ class HeaderHighlightsImage extends AbstractTranslatableResource
     public ?string $fileUrl;
 
     #[Groups([self::GROUP_READ])]
+    public ?string $fileUrlMobile = null;
+
+    #[Groups([self::GROUP_READ])]
     public ?string $originalFileUrl;
 
     #[Groups([self::GROUP_READ])]
@@ -175,6 +178,17 @@ class HeaderHighlightsImage extends AbstractTranslatableResource
     public function setFileUrl(?string $fileUrl): HeaderHighlightsImage
     {
         $this->fileUrl = $fileUrl;
+        return $this;
+    }
+
+    public function getFileUrlMobile(): ?string
+    {
+        return $this->fileUrlMobile;
+    }
+
+    public function setFileUrlMobile(?string $fileUrlMobile): HeaderHighlightsImage
+    {
+        $this->fileUrlMobile = $fileUrlMobile;
         return $this;
     }
 
