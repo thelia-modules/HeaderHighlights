@@ -41,7 +41,7 @@ class HeaderHighlights extends BaseModule
      * @param $newVersion
      * @param ConnectionInterface|null $con
      */
-    public function update($currentVersion, $newVersion, ConnectionInterface $con = null): void
+    public function update($currentVersion, $newVersion, ?ConnectionInterface $con = null): void
     {
         if ($newVersion === '1.0.1') {
             self::setConfigValue('is_initialized', 1);
@@ -63,7 +63,7 @@ class HeaderHighlights extends BaseModule
         }
     }
 
-    public function postActivation(ConnectionInterface $con = null): void
+    public function postActivation(?ConnectionInterface $con = null): void
     {
         if (! self::getConfigValue('is_initialized')) {
             $database = new Database($con);
