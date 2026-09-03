@@ -1,41 +1,42 @@
-<div {{atributes}}>
+<div {{attributes}}>
 	{% if desktops|length %}
 		<ul class="Hero {% if desktops|length == 2 %}Hero--split{% elseif desktops|length == 1 %}Hero--full{% endif %}">
-			{% for desktop in desktops %}
-				{% set width = loop.index != 1 ? 186 : 414 %}
-				{% set height = loop.index != 1 ? 120 : 210 %}
-				<li class="Hero-item">
+			{% for block, desktop in desktops %}
+				{% set mobile = mobiles[block] %}
+				{% set width = block != 1 ? 186 : 414 %}
+				{% set height = block != 1 ? 120 : 210 %}
+				<li class="Hero-item {{ block == 1 ? 'Hero-item--lead' : 'Hero-item--short' }}">
 					<picture class="Hero-image">
 						<source media="(min-width: 1024px)" srcset="{{desktop.fileUrl}}">
-						<img src="{{mobiles[loop.index - 1].fileUrl}}" alt="{{desktop.headerHighlights.i18ns.title}}" width="{{ width }}" height="{{ height }}" class="w-full">
+						<img src="{{mobile.fileUrlMobile}}" alt="{{desktop.headerHighlights.i18ns.title}}" width="{{ width }}" height="{{ height }}">
 					</picture>
 					<div class="Hero-contain">
-						<div class='{{ loop.index != 1 ? "paragraph-4" : "paragraph-1" }} Hero-title'>
-							<span class="hidden lg:block">{{ desktop.headerHighlights.i18ns.title  }}</span>
-							<span class="lg:hidden">{{ mobiles[loop.index - 1].headerHighlights.i18ns.title  }}</span>
+						<div class="Hero-title">
+							<span class="Hero-desktop">{{ desktop.headerHighlights.i18ns.title  }}</span>
+							<span class="Hero-mobile">{{ mobile.headerHighlights.i18ns.title  }}</span>
 						</div>
-						{% if desktop.headerHighlights.i18ns.catchphrase or mobiles[loop.index- 1].headerHighlights.i18ns.catchphrase %}
+						{% if desktop.headerHighlights.i18ns.catchphrase or mobile.headerHighlights.i18ns.catchphrase %}
 							<div class="Hero-desc">
-								<span class="hidden lg:block">{{ desktop.headerHighlights.i18ns.catchphrase  }}</span>
-								<span class="lg:hidden">{{ mobiles[loop.index- 1].headerHighlights.i18ns.catchphrase  }}</span>
+								<span class="Hero-desktop">{{ desktop.headerHighlights.i18ns.catchphrase  }}</span>
+								<span class="Hero-mobile">{{ mobile.headerHighlights.i18ns.catchphrase  }}</span>
 							</div>
 						{% endif %}
-						<div class="hidden lg:block">
-							{{ component('Flexy:Button', {
+						<div class="Hero-desktop">
+							{{ component('Molecules:Button:Base', {
 								text: desktop.headerHighlights.i18ns.callToAction,
 								href: desktop.headerHighlights.i18ns.url,
 								icon_right: "chevron-right",
 								fill: true,
-								size: loop.index == 1 ? "medium" : "small"
+								size: block == 1 ? "large" : "small"
 							}) }}
 						</div>
-						<div class="lg:hidden">
-							{{ component('Flexy:Button', {
-								text: mobiles[loop.index -1].headerHighlights.i18ns.callToAction,
-								href: mobiles[loop.index -1].headerHighlights.i18ns.url,
+						<div class="Hero-mobile">
+							{{ component('Molecules:Button:Base', {
+								text: mobile.headerHighlights.i18ns.callToAction,
+								href: mobile.headerHighlights.i18ns.url,
 								icon_right: "chevron-right",
 								fill: true,
-								size: loop.index == 1 ? "medium" : "small"
+								size: block == 1 ? "large" : "small"
 							}) }}
 						</div>
 					</div>
