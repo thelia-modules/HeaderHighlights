@@ -32,26 +32,44 @@ class HeaderHighlights
 
     public function getImages(): array
     {
-        return $this->dataAccessService->resources('/api/header-highlights');
+        return $this->dataAccessService->resources('/api/header-highlights') ?? [];
     }
 
+    /**
+     * Keyed by the block the back office filled, 1 being the tall block of the layout, and
+     * ordered by it.
+     */
     public function getDesktops(): array
     {
-        return array_filter($this->getImages(), function ($image) {
-            return $image['headerHighlights']['displayType'] == 'desktop';
-        });
+        return $this->blocksOf('desktop');
     }
 
+    /**
+     * Keyed like getDesktops(), and a block the mobile tab leaves empty falls back to its
+     * desktop counterpart.
+     *
+     * The two tabs are filled independently, so the collections line up on the block number and
+     * never on their rank: a mobile block alone in the collection is block 2's, not block 1's.
+     */
     public function getMobiles(): array
     {
-        $mobiles = array_filter($this->getImages(), function ($image) {
-            return $image['headerHighlights']['displayType'] == 'mobile';
-        });
+        return $this->blocksOf('mobile') + $this->getDesktops();
+    }
 
-        if (empty($mobiles)) {
-            $mobiles = $this->getDesktops();
+    private function blocksOf(string $displayType): array
+    {
+        $blocks = [];
+
+        foreach ($this->getImages() as $image) {
+            if ($displayType !== ($image['headerHighlights']['displayType'] ?? null)) {
+                continue;
+            }
+
+            $blocks[(int) ($image['headerHighlights']['imageBlock'] ?? 0)] = $image;
         }
 
-        return $mobiles;
+        ksort($blocks);
+
+        return $blocks;
     }
 }
