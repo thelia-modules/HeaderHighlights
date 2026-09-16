@@ -29,20 +29,20 @@ readonly class HeaderHighlightsNormalizer implements NormalizerInterface
         /** @var HeaderHighlightsImage $headerHighlightImage */
         $headerHighlightImage = $object;
 
-        $useTheliaLibrary = $request->get('use_thelia_library');
-        $resizeMode = $request->get('resize_mode');
-        $format = $request->get('format') ?? 'webp';
-        $quality = (int) ($request->get('quality') ?? 70);
+        $useTheliaLibrary = $request->query->get('use_thelia_library');
+        $resizeMode = $request->query->get('resize_mode');
+        $format = $request->query->get('format') ?? 'webp';
+        $quality = (int) ($request->query->get('quality') ?? 70);
 
-        $widthDesktop = (int) ($request->get('width') ?? 1280);
-        $widthMobile = (int) ($request->get('width_mobile') ?? 768);
+        $widthDesktop = (int) ($request->query->get('width') ?? 1280);
+        $widthMobile = (int) ($request->query->get('width_mobile') ?? 768);
 
         // Thelia's legacy image cache keys the file name on getOptionsHash(), which
         // is empty when height is null. A null height would make the desktop and
         // mobile renders collide on the same cache file. Bound by a square box
         // (height = width) so the hash differs per size while KEEP_IMAGE_RATIO stays
         // width-driven for the landscape hero (no upscale, no borders).
-        $height = $request->get('height');
+        $height = $request->query->get('height');
 
         [$fileUrl, $originalFileUrl] = $this->imageService->imageProcess(
             headerHighlightsImage: $headerHighlightImage->getPropelModel(),
