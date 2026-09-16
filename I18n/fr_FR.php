@@ -16,5 +16,6 @@ return array(
     'lower_right_block' => 'block bas gauche (3)',
     'main_block' => 'bloc principal (1)',
     'upper_right_block' => 'block haut gauche (2)',
+    'Only JPEG, PNG, GIF and WebP images can be used here.' => 'Seules les images JPEG, PNG, GIF et WebP peuvent être utilisées ici.',
     'url' => 'URL',
 );

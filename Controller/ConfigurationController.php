@@ -8,6 +8,7 @@ use HeaderHighlights\Form\HeaderHighlightsDesktopImageForm;
 use HeaderHighlights\Form\HeaderHighlightsMobileImageForm;
 use HeaderHighlights\Model\HeaderHighlightsImage;
 use HeaderHighlights\Model\HeaderHighlightsImageQuery;
+use HeaderHighlights\Services\UploadedImageGuard;
 use Exception;
 use HeaderHighlights\Model\HeaderHighlightsQuery;
 use Propel\Runtime\Exception\PropelException;
@@ -98,7 +99,10 @@ class ConfigurationController extends BaseAdminController
             $fileCreateOrUpdateEvent = new FileCreateOrUpdateEvent(1);
             $fileCreateOrUpdateEvent->setModel($headerHighlightsImage);
 
-            $fileCreateOrUpdateEvent->setUploadedFile($fileBeingUploaded);
+            // The stored name, and the one the image cache publishes, comes
+            // from what the browser sent. Rebuild it around the format read
+            // from the file itself.
+            $fileCreateOrUpdateEvent->setUploadedFile((new UploadedImageGuard())->rename($fileBeingUploaded));
 
             if (empty($headerHighlightsImage->getFile())){
                 $eventNameImage = TheliaEvents::IMAGE_SAVE;
