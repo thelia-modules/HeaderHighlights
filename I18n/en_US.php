@@ -12,4 +12,5 @@
 
 return [
     // 'an english string' => 'The displayed english string',
+    'Only JPEG, PNG, GIF and WebP images can be used here.' => 'Only JPEG, PNG, GIF and WebP images can be used here.',
 ];

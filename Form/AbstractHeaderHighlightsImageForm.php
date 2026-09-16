@@ -135,7 +135,7 @@ abstract class AbstractHeaderHighlightsImageForm extends BaseForm
                     FileType::class,
                     [
                         'constraints' => [
-                            new Image(),
+                            new Image(mimeTypes: ['image/gif', 'image/jpeg', 'image/png', 'image/webp']),
                         ],
                         'required' => false,
                         'label' => Translator::getInstance()->trans('Image', [], HeaderHighlights::DOMAIN_NAME),
