@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Integration tests of the module, run from the root of a Thelia shop that has
+     it installed and active, against the prepared test database:
+
+         php bin/test-prepare
+         vendor/bin/phpunit -c local/modules/HeaderHighlights
+
+     Each test runs inside a transaction rolled back afterwards
+     (Thelia\Test\IntegrationTestCase). -->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd"
+         bootstrap="../../../tests/bootstrap.php"
+         colors="true"
+         failOnWarning="true"
+         failOnRisky="true"
+         cacheDirectory=".phpunit.cache">
+    <php>
+        <ini name="error_reporting" value="-1"/>
+        <server name="SHELL_VERBOSITY" value="-1"/>
+        <server name="KERNEL_CLASS" value="App\Kernel"/>
+        <server name="APP_ENV" value="test" force="true"/>
+        <server name="APP_DEBUG" value="0" force="true"/>
+        <server name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
+        <env name="APP_SECRET" value="287f2178af9e0c250e8219a9df833504"/>
+    </php>
+
+    <testsuites>
+        <testsuite name="integration">
+            <directory>Tests/Integration</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
