@@ -21,24 +21,28 @@
 								<span class="Hero-mobile">{{ mobile.headerHighlights.i18ns.catchphrase  }}</span>
 							</div>
 						{% endif %}
-						<div class="Hero-desktop">
-							{{ component('Molecules:Button:Base', {
-								text: desktop.headerHighlights.i18ns.callToAction,
-								href: desktop.headerHighlights.i18ns.url,
-								icon_right: "chevron-right",
-								fill: true,
-								size: block == 1 ? "large" : "small"
-							}) }}
-						</div>
-						<div class="Hero-mobile">
-							{{ component('Molecules:Button:Base', {
-								text: mobile.headerHighlights.i18ns.callToAction,
-								href: mobile.headerHighlights.i18ns.url,
-								icon_right: "chevron-right",
-								fill: true,
-								size: block == 1 ? "large" : "small"
-							}) }}
-						</div>
+						{% if desktop.headerHighlights.i18ns.callToAction ?? null %}
+							<div class="Hero-desktop">
+								{{ component('Molecules:Button:Base', {
+									text: desktop.headerHighlights.i18ns.callToAction,
+									href: desktop.headerHighlights.i18ns.url,
+									icon_right: "chevron-right",
+									fill: true,
+									size: block == 1 ? "large" : "small"
+								}) }}
+							</div>
+						{% endif %}
+						{% if mobile.headerHighlights.i18ns.callToAction ?? null %}
+							<div class="Hero-mobile">
+								{{ component('Molecules:Button:Base', {
+									text: mobile.headerHighlights.i18ns.callToAction,
+									href: mobile.headerHighlights.i18ns.url,
+									icon_right: "chevron-right",
+									fill: true,
+									size: block == 1 ? "large" : "small"
+								}) }}
+							</div>
+						{% endif %}
 					</div>
 				</li>
 			{% endfor %}
