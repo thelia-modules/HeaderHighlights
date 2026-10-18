@@ -89,13 +89,14 @@ class ConfigurationController extends BaseAdminController
             ->filterByHeaderHighlightsId($headerHighlights->getId())
             ->findOneOrCreate();
 
-        $headerHighlightsImage->setHeaderHighlights($headerHighlights);
-
         /** @var UploadedFile $fileBeingUploaded */
         $fileBeingUploaded = $formData['image' . $idx];
 
 
         if (null !== $fileBeingUploaded) {
+            // Attached only now: a new image linked to its parent is saved with it, file or not.
+            $headerHighlightsImage->setHeaderHighlights($headerHighlights);
+
             $fileCreateOrUpdateEvent = new FileCreateOrUpdateEvent(1);
             $fileCreateOrUpdateEvent->setModel($headerHighlightsImage);
 
@@ -132,8 +133,6 @@ class ConfigurationController extends BaseAdminController
             }
         }
 
-        $headerHighlights = $headerHighlightsImage->getHeaderHighlights();
-
         $headerHighlights
             ->setImageBlock($formData['image_block' . $idx])
             ->setCategoryId($formData['category' . $idx] === "" ? null : $formData['category' . $idx])
@@ -144,6 +143,12 @@ class ConfigurationController extends BaseAdminController
             ->setDisplayType($formData['display_type' . $idx])
             ->setCatchphrase($formData['catchphrase' . $idx])
             ->save();
+
+        // The image row exists once a file has been uploaded for the block: its file column is
+        // required, so a block saved without any image keeps no image row at all.
+        if ($headerHighlightsImage->isNew()) {
+            return;
+        }
 
         $headerHighlightsImage
             ->setLocale($locale)
