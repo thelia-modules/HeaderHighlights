@@ -5,6 +5,7 @@ namespace HeaderHighlights;
 use HeaderHighlights\Model\HeaderHighlights as HeaderHighlightsModel;
 use HeaderHighlights\Model\HeaderHighlightsImage;
 use Propel\Runtime\Connection\ConnectionInterface;
+use Propel\Runtime\Propel;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ServicesConfigurator;
 use Symfony\Component\Finder\Finder;
 use Thelia\Core\Template\TemplateDefinition;
@@ -43,10 +44,6 @@ class HeaderHighlights extends BaseModule
      */
     public function update($currentVersion, $newVersion, ?ConnectionInterface $con = null): void
     {
-        if ($newVersion === '1.0.1') {
-            self::setConfigValue('is_initialized', 1);
-        }
-
         $finder = Finder::create()
             ->name('*.sql')
             ->depth(0)
@@ -65,10 +62,16 @@ class HeaderHighlights extends BaseModule
 
     public function postActivation(?ConnectionInterface $con = null): void
     {
-        if (! self::getConfigValue('is_initialized')) {
-            $database = new Database($con);
-            $database->insertSql(null, [__DIR__ . "/Config/TheliaMain.sql"]);
-            self::setConfigValue('is_initialized', 1);
+        // The install script starts with DROP TABLE, so it only runs when the tables are missing.
+        // header_highlights_image is the probe: Config/update/1.1.0.sql creates header_highlights
+        // on its own, even for a module that was never activated.
+        // The database is asked rather than an "is_initialized" flag in the module configuration:
+        // a shop whose tables were created another way, or whose configuration was lost, would
+        // otherwise have every highlight wiped by a mere reactivation.
+        $con ??= Propel::getWriteConnection('TheliaMain');
+
+        if (!$this->hasTable($con, 'header_highlights_image')) {
+            (new Database($con))->insertSql(null, [__DIR__.'/Config/TheliaMain.sql']);
 
             /** @todo => in SQL file
             foreach (['mobile', 'desktop'] as $displayType) {
@@ -133,4 +136,11 @@ class HeaderHighlights extends BaseModule
         ];
     }
 
+    private function hasTable(ConnectionInterface $con, string $table): bool
+    {
+        $statement = $con->prepare('SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = :table');
+        $statement->execute(['table' => $table]);
+
+        return (int) $statement->fetchColumn() > 0;
+    }
 }
