@@ -49,7 +49,7 @@ final class ActivationTest extends IntegrationTestCase
 
     protected function tearDown(): void
     {
-        if (!$this->hasTable('header_highlights')) {
+        if (!$this->hasTable('header_highlights_image')) {
             (new Database($this->con))->insertSql(null, [self::INSTALL_SCRIPT]);
         }
 
@@ -92,6 +92,24 @@ final class ActivationTest extends IntegrationTestCase
         foreach ($tables as $table) {
             self::assertTrue($this->hasTable($table), $table.' is created.');
         }
+    }
+
+    #[Test]
+    public function activatingTheModuleCreatesTheTablesWhenOnlyTheUpgradeScriptTablesExist(): void
+    {
+        // Config/update/1.1.0.sql creates header_highlights alone, on a module upgraded before
+        // its first activation.
+        $this->forgetInstallFlag();
+        $this->con->exec('SET FOREIGN_KEY_CHECKS = 0');
+        foreach (array_diff($this->installScriptTables(), ['header_highlights', 'header_highlights_i18n']) as $table) {
+            $this->con->exec('DROP TABLE IF EXISTS `'.$table.'`');
+        }
+        $this->con->exec('SET FOREIGN_KEY_CHECKS = 1');
+
+        $this->activate();
+
+        self::assertTrue($this->hasTable('header_highlights_image'));
+        self::assertTrue($this->hasTable('header_highlights_image_i18n'));
     }
 
     private function activate(): void

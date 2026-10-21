@@ -63,12 +63,14 @@ class HeaderHighlights extends BaseModule
     public function postActivation(?ConnectionInterface $con = null): void
     {
         // The install script starts with DROP TABLE, so it only runs when the tables are missing.
+        // header_highlights_image is the probe: Config/update/1.1.0.sql creates header_highlights
+        // on its own, even for a module that was never activated.
         // The database is asked rather than an "is_initialized" flag in the module configuration:
         // a shop whose tables were created another way, or whose configuration was lost, would
         // otherwise have every highlight wiped by a mere reactivation.
         $con ??= Propel::getWriteConnection('TheliaMain');
 
-        if (!$this->hasTable($con, 'header_highlights')) {
+        if (!$this->hasTable($con, 'header_highlights_image')) {
             (new Database($con))->insertSql(null, [__DIR__.'/Config/TheliaMain.sql']);
 
             /** @todo => in SQL file
