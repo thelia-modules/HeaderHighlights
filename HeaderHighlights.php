@@ -4,12 +4,15 @@ namespace HeaderHighlights;
 
 use HeaderHighlights\Model\HeaderHighlights as HeaderHighlightsModel;
 use HeaderHighlights\Model\HeaderHighlightsImage;
+use HeaderHighlights\SharedCache\HeaderHighlightsPurgeListener;
+use HeaderHighlights\SharedCache\HeaderHighlightsSharedCache;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Propel;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ServicesConfigurator;
 use Symfony\Component\Finder\Finder;
 use Thelia\Core\Template\TemplateDefinition;
 use Thelia\Core\Install\Database;
+use Thelia\Core\SharedCache\SharedCacheContributorInterface;
 use Thelia\Model\Base\CategoryQuery;
 use Thelia\Model\ConfigQuery;
 use Thelia\Model\LangQuery;
@@ -30,9 +33,21 @@ class HeaderHighlights extends BaseModule
     public static function configureServices(ServicesConfigurator $servicesConfigurator): void
     {
         $servicesConfigurator->load(self::getModuleCode().'\\', __DIR__)
-            ->exclude([__DIR__.'/I18n/*', __DIR__.'/Config/**/*.php', __DIR__.'/Tests/*', __DIR__.'/HeaderHighlights.php'])
+            ->exclude([__DIR__.'/I18n/*', __DIR__.'/Config/**/*.php', __DIR__.'/Tests/*', __DIR__.'/SharedCache/*', __DIR__.'/HeaderHighlights.php'])
             ->autowire(true)
             ->autoconfigure(true);
+
+        // The shared cache of the public pages is a soft dependency: on a core that
+        // predates it the interface does not exist, and reflecting a class that
+        // implements it would be a fatal error, not a skip.
+        if (interface_exists(SharedCacheContributorInterface::class)) {
+            $servicesConfigurator->set(HeaderHighlightsSharedCache::class)
+                ->autoconfigure(true);
+
+            $servicesConfigurator->set(HeaderHighlightsPurgeListener::class)
+                ->autowire(true)
+                ->autoconfigure(true);
+        }
     }
 
     /**

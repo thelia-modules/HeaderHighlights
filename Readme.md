@@ -56,6 +56,16 @@ unstyled band.
 The call to action is the theme's `Molecules:Button:Base` component, `size` `large` on the lead
 block and `small` on the short ones.
 
+## Shared cache of the public pages
+
+On a Thelia core that brings the shared cache of the public pages
+(`shared_cache_mode`), the module declares `/api/header-highlights` as a
+resource every visitor reads the same: a page that shows the highlights can
+still be kept by the proxy, tagged with `header_highlights`, and saving or
+deleting a highlight or its image purges that key. Uploading a new picture
+purges every page, like any image of a module. On an older core the module
+behaves as before.
+
 ## Hook
 You must define 3 hooks to render (one for html, one for css and one for js)
 
