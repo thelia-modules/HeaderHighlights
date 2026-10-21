@@ -1,0 +1,18 @@
+# Shared cache symbols of a core newer than the published one, used only when interface_exists() finds them
+# (HeaderHighlights::configureServices). Kept out of the report so that PHPStan runs against the published core;
+# an entry the core catches up with is not reported.
+parameters:
+    reportUnmatchedIgnoredErrors: false
+    ignoreErrors:
+        -
+            message: '#^Parameter \$invalidator of method HeaderHighlights\\SharedCache\\HeaderHighlightsPurgeListener::__construct\(\) has invalid type Thelia\\Core\\SharedCache\\SharedCacheInvalidator\.$#'
+            count: 1
+            path: SharedCache/HeaderHighlightsPurgeListener.php
+        -
+            message: '#^Property HeaderHighlights\\SharedCache\\HeaderHighlightsPurgeListener::\$invalidator has unknown class Thelia\\Core\\SharedCache\\SharedCacheInvalidator as its type\.$#'
+            count: 1
+            path: SharedCache/HeaderHighlightsPurgeListener.php
+        -
+            message: '#^Class HeaderHighlights\\SharedCache\\HeaderHighlightsSharedCache implements unknown interface Thelia\\Core\\SharedCache\\SharedCacheContributorInterface\.$#'
+            count: 1
+            path: SharedCache/HeaderHighlightsSharedCache.php
