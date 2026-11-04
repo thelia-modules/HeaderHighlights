@@ -40,7 +40,7 @@ abstract class AbstractHeaderHighlightsImageForm extends BaseForm
         $lang = ($this->request->hasSession()
             ? $this->request->getSession()->get('thelia.current.lang')
             : null) ?? \Thelia\Model\Lang::getDefaultLanguage();
-        $categoriesArray[Translator::getInstance()->trans('Choose a category', [], HeaderHighlights::DOMAIN_NAME)] = "";
+        $categoriesArray[Translator::getInstance()->trans('Choose a category', [], HeaderHighlights::TRANSLATION_DOMAIN)] = "";
         foreach ($categories as $category) {
             $categoryTitle = $category
                 ->getTranslation($lang->getLocale())
@@ -63,12 +63,12 @@ abstract class AbstractHeaderHighlightsImageForm extends BaseForm
                     TextType::class,
                     [
                         'required' => false,
-                        'label' => Translator::getInstance()->trans('Title', [], HeaderHighlights::DOMAIN_NAME),
+                        'label' => Translator::getInstance()->trans('Title', [], HeaderHighlights::TRANSLATION_DOMAIN),
                         'label_attr' => [
                             'for' => 'title_field',
                         ],
                         'attr' => [
-                            'placeholder' => Translator::getInstance()->trans('Header title', [], HeaderHighlights::DOMAIN_NAME),
+                            'placeholder' => Translator::getInstance()->trans('Header title', [], HeaderHighlights::TRANSLATION_DOMAIN),
                             'maxlength' => 40
                         ],
                     ])
@@ -77,7 +77,7 @@ abstract class AbstractHeaderHighlightsImageForm extends BaseForm
                     ChoiceType::class,
                     [
                         'choices' => $categoriesArray,
-                        'label' => Translator::getInstance()->trans('Category', [], HeaderHighlights::DOMAIN_NAME),
+                        'label' => Translator::getInstance()->trans('Category', [], HeaderHighlights::TRANSLATION_DOMAIN),
                         'label_attr' => [
                             'for' => 'category',
                         ],
@@ -86,7 +86,7 @@ abstract class AbstractHeaderHighlightsImageForm extends BaseForm
                             'placeholder' => Translator::getInstance()->trans(
                                 'Category',
                                 [],
-                                HeaderHighlights::DOMAIN_NAME
+                                HeaderHighlights::TRANSLATION_DOMAIN
                             ),
                         ],
                     ])
@@ -94,13 +94,13 @@ abstract class AbstractHeaderHighlightsImageForm extends BaseForm
                     'call_to_action' . $id,
                     TextType::class,
                     [
-                        'label' => Translator::getInstance()->trans('Call to action', [], HeaderHighlights::DOMAIN_NAME),
+                        'label' => Translator::getInstance()->trans('Call to action', [], HeaderHighlights::TRANSLATION_DOMAIN),
                         'label_attr' => [
                             'for' => 'call_to_action',
                         ],
                         'required' => false,
                         'attr' => [
-                            'placeholder' => Translator::getInstance()->trans('Button Libelle', [], HeaderHighlights::DOMAIN_NAME),
+                            'placeholder' => Translator::getInstance()->trans('Button Libelle', [], HeaderHighlights::TRANSLATION_DOMAIN),
                             'maxlength' => 50
                         ]
                     ])
@@ -108,13 +108,13 @@ abstract class AbstractHeaderHighlightsImageForm extends BaseForm
                     'url' . $id,
                     TextType::class,
                     [
-                        'label' => Translator::getInstance()->trans('url', [], HeaderHighlights::DOMAIN_NAME),
+                        'label' => Translator::getInstance()->trans('url', [], HeaderHighlights::TRANSLATION_DOMAIN),
                         'label_attr' => [
                             'for' => 'url',
                         ],
                         'required' => false,
                         'attr' => [
-                            'placeholder' => Translator::getInstance()->trans('Button Link', [], HeaderHighlights::DOMAIN_NAME),
+                            'placeholder' => Translator::getInstance()->trans('Button Link', [], HeaderHighlights::TRANSLATION_DOMAIN),
                         ]
                     ])
                 ->add(
@@ -122,13 +122,13 @@ abstract class AbstractHeaderHighlightsImageForm extends BaseForm
                     TextareaType::class,
                     [
                         'required' => false,
-                        'label' => Translator::getInstance()->trans('Catchphrase', [], HeaderHighlights::DOMAIN_NAME),
+                        'label' => Translator::getInstance()->trans('Catchphrase', [], HeaderHighlights::TRANSLATION_DOMAIN),
                         'label_attr' => [
                             'for' => 'catchphrase',
                         ],
                         'attr' => [
                             'rows' => 5,
-                            'placeholder' => Translator::getInstance()->trans('Your catchphrase', [], HeaderHighlights::DOMAIN_NAME),
+                            'placeholder' => Translator::getInstance()->trans('Your catchphrase', [], HeaderHighlights::TRANSLATION_DOMAIN),
                             'maxlength' => 100
                         ],
                     ])
@@ -140,12 +140,12 @@ abstract class AbstractHeaderHighlightsImageForm extends BaseForm
                             new Image(mimeTypes: ['image/gif', 'image/jpeg', 'image/png', 'image/webp']),
                         ],
                         'required' => false,
-                        'label' => Translator::getInstance()->trans('Image', [], HeaderHighlights::DOMAIN_NAME),
+                        'label' => Translator::getInstance()->trans('Image', [], HeaderHighlights::TRANSLATION_DOMAIN),
                         'label_attr' => [
                             'for' => 'file',
                             'help' => Translator::getInstance()->trans('Recommended size for the picture is 780 x 480',
                                 [],
-                                HeaderHighlights::DOMAIN_NAME
+                                HeaderHighlights::TRANSLATION_DOMAIN
                             )
                         ],
                     ]
