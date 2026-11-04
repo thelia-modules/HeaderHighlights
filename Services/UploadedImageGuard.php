@@ -42,7 +42,7 @@ final class UploadedImageGuard
                 Translator::getInstance()->trans(
                     'Only JPEG, PNG, GIF and WebP images can be used here.',
                     [],
-                    HeaderHighlights::DOMAIN_NAME
+                    HeaderHighlights::TRANSLATION_DOMAIN
                 )
             );
         }

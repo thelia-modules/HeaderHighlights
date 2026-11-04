@@ -45,7 +45,7 @@ class BackHook extends BaseHook
                 'id' => 'tools_menu_header_highlights',
                 'class' => '',
                 'url' => URL::getInstance()?->absoluteUrl('/admin/module/HeaderHighlights'),
-                'title' => $this->trans('Edit your Header', [], HeaderHighlights::DOMAIN_NAME),
+                'title' => $this->trans('Edit your Header', [], HeaderHighlights::TRANSLATION_DOMAIN),
             ]
         );
     }

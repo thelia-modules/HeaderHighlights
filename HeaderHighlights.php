@@ -23,6 +23,9 @@ class HeaderHighlights extends BaseModule
     /** @var string */
     public const DOMAIN_NAME = 'headerHighlights';
 
+    /** The core registers the I18n catalogue of a module under its code in lower case. */
+    public const TRANSLATION_DOMAIN = 'headerhighlights';
+
     const IMAGE_COUNT = 3;
 
     /**
